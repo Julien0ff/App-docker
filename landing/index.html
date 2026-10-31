@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dock (1) — Le Deck de Contrôle Docker Minimaliste</title>
-  <meta name="description" content="Gestionnaire Docker local moderne inspiré de Nothing OS. Zéro ligne de commande, métriques en direct, éditeur Compose et webhooks Discord granulaires.">
+  <meta name="description" content="Application desktop Docker moderne inspirée de Nothing OS. Zéro ligne de commande, métriques en direct, éditeur Compose et webhooks Discord granulaires.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -49,16 +49,20 @@
         </div>
         <div class="flex items-center gap-2">
           <span class="font-display font-extrabold text-xl tracking-tight text-white group-hover:text-zinc-200 transition-colors">DOCK (1)</span>
-          <span class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-zinc-400 border border-white/10">v26.1</span>
+          <span id="navVersionTag" class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-zinc-400 border border-white/10">v26.1</span>
         </div>
       </a>
 
       <!-- Desktop Navigation Links -->
       <nav class="hidden md:flex items-center gap-8 text-xs font-mono uppercase tracking-wider text-zinc-400">
         <a href="#features" class="hover:text-white transition-colors">Fonctionnalités</a>
-        <a href="#preview" class="hover:text-white transition-colors">Aperçu</a>
+        <a href="#preview" class="hover:text-white transition-colors">Aperçu App</a>
         <a href="#downloads" class="hover:text-white transition-colors">Téléchargements</a>
         <a href="#changelog" class="hover:text-white transition-colors">Changelog</a>
+        <a href="https://github.com/Julien0ff/App-docker" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors flex items-center gap-1">
+          <span>GitHub</span>
+          <svg class="w-3 h-3 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
       </nav>
 
       <!-- CTA buttons -->
@@ -68,10 +72,10 @@
           FR / EN
         </button>
 
-        <!-- Direct Launch App Button -->
-        <a href="/" class="btn-primary text-xs font-semibold px-4 py-2.5 rounded-xl bg-white text-zinc-950 hover:bg-zinc-200 transition-all flex items-center gap-2 shadow-xs">
-          <span>Ouvrir l'App</span>
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        <!-- Direct Download Anchor -->
+        <a href="#downloads" class="text-xs font-semibold px-4 py-2.5 rounded-xl bg-white text-zinc-950 hover:bg-zinc-200 transition-all flex items-center gap-2 shadow-xs">
+          <span>Télécharger l'App</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
         </a>
       </div>
     </div>
@@ -79,48 +83,39 @@
 
   <main class="relative z-10">
     <!-- Hero Section -->
-    <section class="pt-20 pb-28 text-center max-w-5xl mx-auto px-6">
-      <!-- Release Pill -->
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900/90 border border-zinc-800 text-xs font-mono text-zinc-300 mb-8 animate-fade-in hover:border-zinc-700 transition-colors">
+    <section class="pt-20 pb-24 text-center max-w-5xl mx-auto px-6">
+      <!-- Release Pill (Live from GitHub) -->
+      <div id="heroReleasePill" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900/90 border border-zinc-800 text-xs font-mono text-zinc-300 mb-8 animate-fade-in hover:border-zinc-700 transition-colors">
         <span class="w-2 h-2 rounded-full bg-[#ea3829] shadow-[0_0_8px_#ea3829] animate-pulse"></span>
-        <span class="text-zinc-400">Version 26.1 disponible</span>
+        <span id="heroReleaseLabel" class="text-zinc-400">Release officielle</span>
         <span class="text-zinc-600">/</span>
-        <span class="text-zinc-200 font-medium">Linux • macOS • Windows</span>
+        <span id="heroReleaseTag" class="text-zinc-200 font-medium">v26.1 (CalVer)</span>
       </div>
 
       <!-- Main Heading -->
       <h1 class="text-5xl sm:text-7xl font-display font-extrabold tracking-tight text-white mb-6 leading-[1.08]">
-        Le deck de contrôle Docker.<br>
+        L'Application Desktop Docker.<br>
         <span class="text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-zinc-400 to-[#ea3829]">
-          Inspiré par Nothing OS.
+          Inspirée par Nothing OS.
         </span>
       </h1>
 
       <!-- Subtitle -->
       <p class="max-w-2xl mx-auto text-base sm:text-lg text-zinc-400 font-normal leading-relaxed mb-10">
-        Surveillez vos conteneurs en temps réel, éditez vos fichiers Compose sans jamais ouvrir un terminal et recevez des alertes Discord ultra-ciblées.
+        Une application native épurée pour piloter vos conteneurs en direct, éditer vos fichiers Compose sans jamais ouvrir un terminal et recevoir des alertes Discord ultra-ciblées.
       </p>
 
-      <!-- Action Buttons -->
+      <!-- Action Buttons (No command line / No local dashboard duplicate) -->
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
         <a href="#downloads" class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-[#ea3829] text-white font-semibold text-sm shadow-[0_10px_25px_rgba(234,56,41,0.3)] hover:bg-[#ea3829]/90 transition-all flex items-center justify-center gap-2.5">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-          <span>Télécharger v26.1</span>
+          <span id="btnHeroDownload">Télécharger l'Application</span>
         </a>
 
-        <a href="/" class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 text-zinc-200 font-semibold text-sm hover:bg-zinc-800/80 hover:border-zinc-700 transition-all flex items-center justify-center gap-2">
-          <span>Accéder au Dashboard</span>
-          <span class="font-mono text-xs text-zinc-500">127.0.0.1:4500</span>
+        <a href="https://github.com/Julien0ff/App-docker" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 text-zinc-200 font-semibold text-sm hover:bg-zinc-800/80 hover:border-zinc-700 transition-all flex items-center justify-center gap-2">
+          <svg class="w-4 h-4 text-zinc-400" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          <span>Dépôt GitHub (Julien0ff)</span>
         </a>
-      </div>
-
-      <!-- Quick Command Snippet -->
-      <div class="mt-12 inline-flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800/90 font-mono text-xs text-zinc-400">
-        <span class="text-[#ea3829]">$</span>
-        <span>curl -fsSL https://get.dock-one.local/install.sh | bash</span>
-        <button onclick="navigator.clipboard.writeText('curl -fsSL https://get.dock-one.local/install.sh | bash'); this.innerText='Copié !'; setTimeout(() => this.innerText='Copier', 2000)" class="text-[11px] text-zinc-500 hover:text-white px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 transition-colors">
-          Copier
-        </button>
       </div>
     </section>
 
@@ -133,7 +128,7 @@
             <span class="w-3 h-3 rounded-full bg-zinc-800"></span>
             <span class="w-3 h-3 rounded-full bg-zinc-800"></span>
             <span class="w-3 h-3 rounded-full bg-zinc-800"></span>
-            <span class="ml-2 text-zinc-400 font-semibold">dock-one-desktop — v26.1</span>
+            <span class="ml-2 text-zinc-400 font-semibold">dock-one-desktop — Application Fenêtre</span>
           </div>
           <div class="hidden sm:flex items-center gap-3">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -338,14 +333,28 @@
       </div>
     </section>
 
-    <!-- Downloads Matrix -->
+    <!-- Downloads Section (100% Dynamic GitHub Releases) -->
     <section id="downloads" class="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-900">
       <div class="text-center max-w-2xl mx-auto mb-16">
-        <h2 class="text-xs font-mono uppercase tracking-widest text-[#ea3829] mb-3">CROSS-PLATFORM</h2>
+        <h2 class="text-xs font-mono uppercase tracking-widest text-[#ea3829] mb-3">TÉLÉCHARGEMENT DIRECT</h2>
         <p class="text-3xl sm:text-4xl font-display font-bold text-white tracking-tight">
-          Disponible sur votre plateforme
+          Installateurs Officiels
         </p>
-        <p class="text-xs text-zinc-400 font-mono mt-2">Release 26.1 signée avec SHA-256 checksums</p>
+        <p id="releaseInfoSub" class="text-xs text-zinc-400 font-mono mt-2">
+          Synchronisé avec GitHub Releases • <a href="https://github.com/Julien0ff/App-docker/releases" target="_blank" class="text-[#ea3829] hover:underline">Julien0ff/App-docker</a>
+        </p>
+      </div>
+
+      <!-- Release Status Bar -->
+      <div id="releaseStatusBar" class="mb-8 p-4 rounded-2xl bg-zinc-900/50 border border-zinc-800 flex items-center justify-between text-xs font-mono">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="releaseStatusText">Vérification des versions GitHub en direct...</span>
+        </div>
+        <a id="allReleasesLink" href="https://github.com/Julien0ff/App-docker/releases" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white flex items-center gap-1.5 transition-colors">
+          <span>Toutes les releases</span>
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </a>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -354,23 +363,24 @@
           <div>
             <div class="flex items-center justify-between mb-4">
               <span class="text-2xl">🐧</span>
-              <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-zinc-900 text-zinc-400">Recommandé</span>
+              <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-zinc-900 text-zinc-400">Arch / Debian / Ubuntu</span>
             </div>
-            <h3 class="text-xl font-bold font-display text-white mb-1">Arch & Linux</h3>
-            <p class="text-xs text-zinc-400 mb-6">Arch Linux (AUR), Debian, Ubuntu, Fedora, Standalone tarball.</p>
+            <h3 class="text-xl font-bold font-display text-white mb-1">Linux Desktop</h3>
+            <p class="text-xs text-zinc-400 mb-6">Paquets natifs autonomes sans ligne de commande requise.</p>
 
-            <div class="space-y-2 font-mono text-xs">
-              <a href="https://github.com/dock-one/releases/download/v26.1/dock-one-26.1-linux-x64.tar.gz" class="w-full py-2.5 px-3.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 flex items-center justify-between transition-colors">
-                <span>Linux x64 (.tar.gz)</span>
-                <span class="text-[10px] text-zinc-500">42 MB</span>
+            <div class="space-y-2.5 font-mono text-xs">
+              <a id="btnLinuxAppImage" href="https://github.com/Julien0ff/App-docker/releases" target="_blank" class="w-full py-3 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 flex items-center justify-between transition-colors">
+                <span class="font-semibold">Linux AppImage (.AppImage)</span>
+                <span id="sizeLinuxAppImage" class="text-[10px] text-zinc-500">64-bit</span>
               </a>
-              <a href="https://github.com/dock-one/releases/download/v26.1/dock-one_26.1_amd64.deb" class="w-full py-2.5 px-3.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 flex items-center justify-between transition-colors">
-                <span>Debian / Ubuntu (.deb)</span>
-                <span class="text-[10px] text-zinc-500">44 MB</span>
+              <a id="btnLinuxDeb" href="https://github.com/Julien0ff/App-docker/releases" target="_blank" class="w-full py-3 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 flex items-center justify-between transition-colors">
+                <span class="font-semibold">Debian / Ubuntu (.deb)</span>
+                <span id="sizeLinuxDeb" class="text-[10px] text-zinc-500">amd64</span>
               </a>
-              <div class="p-3 rounded-xl bg-zinc-900/60 border border-zinc-800/80 text-[11px] text-zinc-400">
-                <span class="text-[#ea3829]">yay</span> -S dock-one-bin
-              </div>
+              <a id="btnLinuxTar" href="https://github.com/Julien0ff/App-docker/releases" target="_blank" class="w-full py-3 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 flex items-center justify-between transition-colors">
+                <span class="font-semibold">Archive Tarball (.tar.gz)</span>
+                <span id="sizeLinuxTar" class="text-[10px] text-zinc-500">Portable</span>
+              </a>
             </div>
           </div>
         </div>
@@ -383,20 +393,21 @@
               <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-zinc-900 text-zinc-400">macOS 12+</span>
             </div>
             <h3 class="text-xl font-bold font-display text-white mb-1">Apple macOS</h3>
-            <p class="text-xs text-zinc-400 mb-6">Compatible avec Docker Desktop, Colima ou OrbStack.</p>
+            <p class="text-xs text-zinc-400 mb-6">Installateurs DMG pour Apple Silicon et processeurs Intel.</p>
 
-            <div class="space-y-2 font-mono text-xs">
-              <a href="https://github.com/dock-one/releases/download/v26.1/dock-one-26.1-arm64.dmg" class="w-full py-2.5 px-3.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 flex items-center justify-between transition-colors">
-                <span>Apple Silicon (M1/M2/M3)</span>
-                <span class="text-[10px] text-zinc-500">48 MB</span>
+            <div class="space-y-2.5 font-mono text-xs">
+              <a id="btnMacArm" href="https://github.com/Julien0ff/App-docker/releases" target="_blank" class="w-full py-3 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 flex items-center justify-between transition-colors">
+                <span class="font-semibold">Apple Silicon M1/M2/M3 (.dmg)</span>
+                <span id="sizeMacArm" class="text-[10px] text-zinc-500">arm64</span>
               </a>
-              <a href="https://github.com/dock-one/releases/download/v26.1/dock-one-26.1-x64.dmg" class="w-full py-2.5 px-3.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 flex items-center justify-between transition-colors">
-                <span>Intel x64 (.dmg)</span>
-                <span class="text-[10px] text-zinc-500">51 MB</span>
+              <a id="btnMacIntel" href="https://github.com/Julien0ff/App-docker/releases" target="_blank" class="w-full py-3 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 flex items-center justify-between transition-colors">
+                <span class="font-semibold">Intel x64 (.dmg)</span>
+                <span id="sizeMacIntel" class="text-[10px] text-zinc-500">x86_64</span>
               </a>
-              <div class="p-3 rounded-xl bg-zinc-900/60 border border-zinc-800/80 text-[11px] text-zinc-400">
-                <span class="text-[#ea3829]">brew</span> install dock-one
-              </div>
+              <a id="btnMacZip" href="https://github.com/Julien0ff/App-docker/releases" target="_blank" class="w-full py-3 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 flex items-center justify-between transition-colors">
+                <span class="font-semibold">Archive Universelle (.zip)</span>
+                <span id="sizeMacZip" class="text-[10px] text-zinc-500">Universel</span>
+              </a>
             </div>
           </div>
         </div>
@@ -406,101 +417,71 @@
           <div>
             <div class="flex items-center justify-between mb-4">
               <span class="text-2xl">🪟</span>
-              <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-zinc-900 text-zinc-400">Win 10/11</span>
+              <span class="font-mono text-[11px] px-2 py-0.5 rounded bg-zinc-900 text-zinc-400">Windows 10 / 11</span>
             </div>
             <h3 class="text-xl font-bold font-display text-white mb-1">Microsoft Windows</h3>
-            <p class="text-xs text-zinc-400 mb-6">Support natif WSL2 et named pipes Docker Desktop.</p>
+            <p class="text-xs text-zinc-400 mb-6">Installateur exécutable ou version portable sans installation.</p>
 
-            <div class="space-y-2 font-mono text-xs">
-              <a href="https://github.com/dock-one/releases/download/v26.1/dock-one-setup-26.1.exe" class="w-full py-2.5 px-3.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 flex items-center justify-between transition-colors">
-                <span>Windows Installer (.exe)</span>
-                <span class="text-[10px] text-zinc-500">49 MB</span>
+            <div class="space-y-2.5 font-mono text-xs">
+              <a id="btnWinExe" href="https://github.com/Julien0ff/App-docker/releases" target="_blank" class="w-full py-3 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 flex items-center justify-between transition-colors">
+                <span class="font-semibold">Installateur Setup (.exe)</span>
+                <span id="sizeWinExe" class="text-[10px] text-zinc-500">64-bit</span>
               </a>
-              <a href="https://github.com/dock-one/releases/download/v26.1/dock-one-portable-26.1.zip" class="w-full py-2.5 px-3.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 flex items-center justify-between transition-colors">
-                <span>Portable (.zip)</span>
-                <span class="text-[10px] text-zinc-500">47 MB</span>
+              <a id="btnWinZip" href="https://github.com/Julien0ff/App-docker/releases" target="_blank" class="w-full py-3 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 flex items-center justify-between transition-colors">
+                <span class="font-semibold">Archive Portable (.zip)</span>
+                <span id="sizeWinZip" class="text-[10px] text-zinc-500">Standalone</span>
               </a>
-              <div class="p-3 rounded-xl bg-zinc-900/60 border border-zinc-800/80 text-[11px] text-zinc-400">
-                <span class="text-[#ea3829]">winget</span> install DockOne
-              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Changelogs Section -->
+    <!-- Changelogs Section (Dynamic from GitHub Releases) -->
     <section id="changelog" class="max-w-4xl mx-auto px-6 py-20 border-t border-zinc-900">
       <div class="text-center max-w-2xl mx-auto mb-16">
         <h2 class="text-xs font-mono uppercase tracking-widest text-[#ea3829] mb-3">HISTORIQUE DES VERSIONS</h2>
         <p class="text-3xl font-display font-bold text-white tracking-tight">
-          Notes de version & Changelogs
+          Notes de version officielles
         </p>
       </div>
 
-      <div class="space-y-8 font-mono">
-        <!-- Release 26.1 -->
+      <!-- Container dynamically populated or fallback -->
+      <div id="changelogContainer" class="space-y-8 font-mono">
+        <!-- Release 26.1 Fallback / Initial -->
         <div class="p-6 rounded-3xl bg-zinc-950 border border-zinc-800 relative overflow-hidden">
           <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div class="flex items-center gap-3">
-              <span class="text-lg font-bold text-white">v26.1</span>
-              <span class="text-xs px-2.5 py-0.5 rounded-full bg-[#ea3829]/15 text-[#ea3829] border border-[#ea3829]/30">Actuelle</span>
+              <span id="clLatestTag" class="text-lg font-bold text-white">v26.1</span>
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-[#ea3829]/15 text-[#ea3829] border border-[#ea3829]/30">Dernière version</span>
             </div>
-            <span class="text-xs text-zinc-500">CalVer 2026 // Release 1</span>
+            <span id="clLatestDate" class="text-xs text-zinc-500">CalVer 2026 // Release 1</span>
           </div>
 
-          <ul class="space-y-2.5 text-xs text-zinc-400">
-            <li class="flex items-start gap-2.5">
-              <span class="text-[#ea3829] font-bold">●</span>
-              <span><strong>Écran de Boot & Onboarding Nothing OS</strong> : Séquence de boot hardware avec diode pulsée et visite guidée interactive en 5 étapes.</span>
-            </li>
-            <li class="flex items-start gap-2.5">
-              <span class="text-[#ea3829] font-bold">●</span>
-              <span><strong>Mise à jour 1-clic des Stacks et Conteneurs</strong> : Déclenchez <code>docker compose pull && up -d</code> ou le renouvellement de conteneur directement depuis l'interface.</span>
-            </li>
-            <li class="flex items-start gap-2.5">
-              <span class="text-[#ea3829] font-bold">●</span>
-              <span><strong>Filtrage Granulaire Webhook Discord</strong> : Résolution stricte du périmètre pour que les alertes ne touchent que les conteneurs et stacks sélectionnés.</span>
-            </li>
-            <li class="flex items-start gap-2.5">
-              <span class="text-[#ea3829] font-bold">●</span>
-              <span><strong>Sélecteur de Stacks sur le Dashboard</strong> : Affichez uniquement un cluster ou une stack sur la grille principale en 1 clic.</span>
-            </li>
-            <li class="flex items-start gap-2.5">
-              <span class="text-[#ea3829] font-bold">●</span>
-              <span><strong>Nettoyage d'interface</strong> : Retrait du doublon d'icône <code>+ + Nouveau</code> et isolation de la vue Stacks hors du toggle Grille/Tableau.</span>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Release 26.0 -->
-        <div class="p-6 rounded-3xl bg-zinc-950 border border-zinc-800/80">
-          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-            <div class="flex items-center gap-3">
-              <span class="text-lg font-bold text-zinc-300">v26.0</span>
-              <span class="text-xs px-2.5 py-0.5 rounded-full bg-zinc-900 text-zinc-500">Précédente</span>
-            </div>
-            <span class="text-xs text-zinc-500">Lancement initial</span>
+          <div id="clLatestBody">
+            <ul class="space-y-2.5 text-xs text-zinc-400">
+              <li class="flex items-start gap-2.5">
+                <span class="text-[#ea3829] font-bold">●</span>
+                <span><strong>Application Desktop Native</strong> : Packagée avec Electron pour une expérience fluide hors navigateur.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="text-[#ea3829] font-bold">●</span>
+                <span><strong>Écran de Boot & Onboarding Nothing OS</strong> : Séquence de boot hardware avec diode pulsée et visite guidée interactive en 5 étapes.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="text-[#ea3829] font-bold">●</span>
+                <span><strong>Mise à jour 1-clic des Stacks et Conteneurs</strong> : Déclenchez <code>docker compose pull && up -d</code> ou le renouvellement de conteneur directement depuis l'interface.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="text-[#ea3829] font-bold">●</span>
+                <span><strong>Filtrage Granulaire Webhook Discord</strong> : Résolution stricte du périmètre pour que les alertes ne touchent que les conteneurs et stacks sélectionnés.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="text-[#ea3829] font-bold">●</span>
+                <span><strong>Sélecteur de Stacks sur le Dashboard</strong> : Affichez uniquement un cluster ou une stack sur la grille principale en 1 clic.</span>
+              </li>
+            </ul>
           </div>
-
-          <ul class="space-y-2 text-xs text-zinc-500">
-            <li class="flex items-start gap-2.5">
-              <span>●</span>
-              <span>Moteur de surveillance Docker via socket UNIX local.</span>
-            </li>
-            <li class="flex items-start gap-2.5">
-              <span>●</span>
-              <span>Bento Dashboard avec métriques CPU/RAM hôte et uptime en direct.</span>
-            </li>
-            <li class="flex items-start gap-2.5">
-              <span>●</span>
-              <span>Support multilingue Français 🇫🇷 / English 🇬🇧 et thèmes Dark / Light.</span>
-            </li>
-            <li class="flex items-start gap-2.5">
-              <span>●</span>
-              <span>Palette de commandes ⌘K et support systemd user autostart.</span>
-            </li>
-          </ul>
         </div>
       </div>
     </section>
@@ -515,12 +496,12 @@
         <span>— Hardware Aesthetic for Docker</span>
       </div>
       <div>
-        <span>Version 26.1 CalVer • Construit avec passion</span>
+        <span>Projet Open Source • Julien0ff/App-docker</span>
       </div>
       <div class="flex items-center gap-4">
-        <a href="/" class="text-zinc-400 hover:text-white transition-colors">Dashboard Local</a>
         <a href="#downloads" class="text-zinc-400 hover:text-white transition-colors">Téléchargements</a>
-        <a href="https://github.com" target="_blank" class="text-zinc-400 hover:text-white transition-colors">GitHub</a>
+        <a href="https://github.com/Julien0ff/App-docker/releases" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white transition-colors">Releases GitHub</a>
+        <a href="https://github.com/Julien0ff/App-docker" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white transition-colors">Dépôt GitHub</a>
       </div>
     </div>
   </footer>

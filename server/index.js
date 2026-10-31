@@ -777,13 +777,13 @@ app.post('/api/stacks/deploy', async (req, res) => {
 // 12. Check for updates (CalVer 26.1)
 app.get('/api/system/check-updates', (req, res) => {
   const currentVersion = APP_VERSION;
-  const githubRepo = process.env.GITHUB_REPO || 'foxy/dockdash';
+  const githubRepo = process.env.GITHUB_REPO || 'Julien0ff/App-docker';
 
   const options = {
     hostname: 'api.github.com',
     path: `/repos/${githubRepo}/releases/latest`,
     headers: { 'User-Agent': 'Dock-1-App' },
-    timeout: 3000,
+    timeout: 4000,
   };
 
   const reqGit = https.get(options, (gitRes) => {
@@ -801,8 +801,10 @@ app.get('/api/system/check-updates', (req, res) => {
             latestVersion: tag,
             hasUpdate,
             releaseName: rel.name || tag,
-            releaseUrl: rel.html_url,
+            releaseUrl: rel.html_url || `https://github.com/${githubRepo}/releases`,
             publishedAt: rel.published_at,
+            body: rel.body || '',
+            assets: rel.assets || [],
           });
         }
       } catch (_) {}

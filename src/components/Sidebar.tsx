@@ -9,9 +9,11 @@ import {
   Globe,
   Compass,
   ExternalLink,
+  ArrowUpCircle,
 } from 'lucide-react';
 import { Logo } from './Logo';
 import { Language, translations } from '../i18n/translations';
+import { UpdateCheckResponse } from '../types';
 
 interface SidebarProps {
   currentTab: 'dashboard' | 'stacks' | 'containers';
@@ -19,6 +21,8 @@ interface SidebarProps {
   onOpenWebhooks: () => void;
   onOpenAutostart: () => void;
   onOpenOnboarding?: () => void;
+  onOpenUpdates?: () => void;
+  updateInfo?: UpdateCheckResponse | null;
   isDark: boolean;
   onToggleTheme: () => void;
   lang?: Language;
@@ -37,6 +41,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onOpenWebhooks,
   onOpenAutostart,
   onOpenOnboarding,
+  onOpenUpdates,
+  updateInfo,
   isDark,
   onToggleTheme,
   lang = 'fr',
@@ -180,6 +186,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <Compass size={15} className="text-zinc-400 group-hover:text-[#ea3829] transition-colors" />
                 <span>{t.onboardingTour}</span>
               </div>
+            </button>
+          )}
+
+          {onOpenUpdates && (
+            <button
+              onClick={onOpenUpdates}
+              type="button"
+              className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:bg-light-hover dark:hover:bg-nothing-subcard border border-light-border/60 dark:border-nothing-border/60 btn-press group"
+            >
+              <div className="flex items-center gap-2.5">
+                <ArrowUpCircle
+                  size={15}
+                  className={updateInfo?.hasUpdate ? 'text-nothing-red animate-bounce' : 'text-zinc-400 group-hover:text-nothing-red transition-colors'}
+                />
+                <span>{lang === 'fr' ? 'Mises à jour' : 'Updates'}</span>
+              </div>
+              <span
+                className={`text-[10px] font-mono px-2 py-0.5 rounded-md ${
+                  updateInfo?.hasUpdate
+                    ? 'bg-nothing-red/15 text-nothing-red border border-nothing-red/30 font-bold'
+                    : 'bg-light-card dark:bg-nothing-card text-zinc-500 border border-light-border dark:border-nothing-border'
+                }`}
+              >
+                {updateInfo?.hasUpdate ? `v${updateInfo.latestVersion} !` : 'v26.1'}
+              </span>
             </button>
           )}
 

@@ -16,6 +16,7 @@ import { ComposeEditorModal } from './components/ComposeEditorModal';
 import { CreateContainerModal } from './components/CreateContainerModal';
 import { PreloadScreen } from './components/PreloadScreen';
 import { OnboardingModal } from './components/OnboardingModal';
+import { UpdateModal } from './components/UpdateModal';
 import {
   DockerContainer,
   SystemInfoResponse,
@@ -74,6 +75,7 @@ export const App: React.FC = () => {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState<boolean>(false);
   const [isAutostartModalOpen, setIsAutostartModalOpen] = useState<boolean>(false);
   const [isWebhooksModalOpen, setIsWebhooksModalOpen] = useState<boolean>(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState<boolean>(false);
 
   // Language state (persisted)
   const [lang, setLang] = useState<Language>(() => {
@@ -413,6 +415,8 @@ export const App: React.FC = () => {
         onOpenWebhooks={() => setIsWebhooksModalOpen(true)}
         onOpenAutostart={() => setIsAutostartModalOpen(true)}
         onOpenOnboarding={() => setIsOnboardingOpen(true)}
+        onOpenUpdates={() => setIsUpdateModalOpen(true)}
+        updateInfo={updateInfo}
         isDark={isDark}
         onToggleTheme={toggleTheme}
         lang={lang}
@@ -651,6 +655,15 @@ export const App: React.FC = () => {
         systemd={systemInfo?.systemd}
         isToggling={isAutostartToggling}
         onToggle={handleToggleAutostart}
+      />
+
+      {/* App & System Updates Modal */}
+      <UpdateModal
+        isOpen={isUpdateModalOpen}
+        onClose={() => setIsUpdateModalOpen(false)}
+        updateInfo={updateInfo}
+        onUpdateInfoChange={(info) => setUpdateInfo(info)}
+        lang={lang}
       />
     </div>
   );

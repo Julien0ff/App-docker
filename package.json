@@ -2,11 +2,17 @@
   "name": "dock-one",
   "version": "26.1.0",
   "description": "Dock (1) — Minimalist Docker & Compose Manager inspired by Nothing OS",
-  "main": "server/index.js",
+  "main": "electron/main.js",
   "scripts": {
     "dev": "concurrently -n \"api,web\" -c \"cyan,magenta\" \"node server/index.js\" \"vite\"",
     "build": "vite build",
     "start": "NODE_ENV=production node server/index.js",
+    "app": "electron .",
+    "app:dev": "concurrently -n \"api,web,electron\" -c \"cyan,magenta,yellow\" \"node server/index.js\" \"vite\" \"electron .\"",
+    "app:dist": "npm run build && electron-builder",
+    "app:dist:linux": "npm run build && electron-builder --linux deb AppImage tar.gz",
+    "app:dist:mac": "npm run build && electron-builder --mac dmg zip",
+    "app:dist:win": "npm run build && electron-builder --win nsis zip",
     "service:setup": "bash scripts/setup-service.sh"
   },
   "keywords": [],
@@ -32,9 +38,45 @@
     "@vitejs/plugin-react": "^6.1.2",
     "autoprefixer": "^10.6.2",
     "concurrently": "^10.0.6",
+    "electron": "^45.2.1",
+    "electron-builder": "^26.18.0",
     "postcss": "^8.5.32",
     "tailwindcss": "^3.4.19",
     "typescript": "^7.0.2",
     "vite": "^8.3.5"
+  },
+  "build": {
+    "appId": "com.julien0ff.dockone",
+    "productName": "Dock (1)",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "server/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "tar.gz"
+      ],
+      "category": "Development"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.developer-tools"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    }
   }
 }
