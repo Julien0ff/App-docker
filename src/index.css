@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ease-emil-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-emil-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(140, 140, 150, 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(140, 140, 150, 0.45);
+}
+
+/* Emil Kowalski Button & Clickable Press feedback */
+.btn-press {
+  transition: transform 160ms var(--ease-emil-out), background-color 150ms ease, border-color 150ms ease, opacity 150ms ease;
+  user-select: none;
+}
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+/* Subtle Nothing Dot Texture */
+.nothing-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+.light .nothing-dots {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+}
+
+/* Dot LED Pulsing */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.92);
+  }
+}
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s var(--ease-emil-in-out) infinite;
+}
+
+/* Smooth enter transitions */
+.fade-in-up {
+  animation: fadeInUp 240ms var(--ease-emil-out) forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

@@ -1,0 +1,136 @@
+name: Release Multiplatform (Linux, macOS, Windows)
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build & Package (${{ matrix.os }} - ${{ matrix.arch }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+            arch: x64
+            output_name: dock-one-linux-x64
+          - os: macos-latest
+            platform: darwin
+            arch: arm64
+            output_name: dock-one-macos-arm64
+          - os: macos-13
+            platform: darwin
+            arch: x64
+            output_name: dock-one-macos-x64
+          - os: windows-latest
+            platform: win32
+            arch: x64
+            output_name: dock-one-windows-x64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend production bundle
+        run: npm run build
+
+      - name: Package Release Archive (Linux / macOS)
+        if: matrix.platform != 'win32'
+        run: |
+          mkdir -p release-pkg
+          cp -r dist server package.json package-lock.json README.md release-pkg/
+          tar -czvf ${{ matrix.output_name }}.tar.gz -C release-pkg .
+
+      - name: Package Release Archive (Windows)
+        if: matrix.platform == 'win32'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path release-pkg
+          Copy-Item -Recurse dist, server, package.json, package-lock.json, README.md release-pkg/
+          Compress-Archive -Path release-pkg/* -DestinationPath ${{ matrix.output_name }}.zip
+
+      - name: Generate SHA256 Checksum
+        shell: bash
+        run: |
+          if [ "${{ matrix.platform }}" = "win32" ]; then
+            sha256sum ${{ matrix.output_name }}.zip > ${{ matrix.output_name }}.zip.sha256
+          else
+            sha256sum ${{ matrix.output_name }}.tar.gz > ${{ matrix.output_name }}.tar.gz.sha256
+          fi
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.output_name }}
+          path: |
+            ${{ matrix.output_name }}.*
+
+  publish-release:
+    name: Publish GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+
+      - name: Flatten artifacts directory
+        run: |
+          mkdir -p release-assets
+          find artifacts/ -type f -exec mv {} release-assets/ \;
+          ls -la release-assets/
+
+      - name: Extract Tag & Version
+        id: vars
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          if [ -z "$TAG_NAME" ] || [ "$TAG_NAME" = "refs/heads/main" ]; then
+            TAG_NAME="v26.1"
+          fi
+          echo "tag=$TAG_NAME" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.vars.outputs.tag }}
+          name: "Dock-One ${{ steps.vars.outputs.tag }}"
+          body: |
+            # Dock-One ${{ steps.vars.outputs.tag }} — Multiplatform Release
+            
+            ### ✨ What's New
+            - **CalVer System**: Version `26.1` (2026, release 1).
+            - **Discord Webhooks**: Granular container & stack targeting, live uptime & status reporting embed.
+            - **Docker Compose Live Editor**: Edit `docker-compose.yml` directly from the UI and redeploy.
+            - **Zero-CLI Deployments**: Create new standalone containers or compose stacks without terminal commands.
+            - **Cross-Platform**: Support for Linux, macOS, and Windows.
+            - **Bilingual Interface**: Seamless French and English translations.
+            - **Auto-Update Notifications**: Direct GitHub Release polling and alerts.
+            
+            ### 📦 Download Assets
+            - **Linux (x64)**: `dock-one-linux-x64.tar.gz`
+            - **macOS (Apple Silicon M1/M2/M3)**: `dock-one-macos-arm64.tar.gz`
+            - **macOS (Intel x64)**: `dock-one-macos-x64.tar.gz`
+            - **Windows (x64)**: `dock-one-windows-x64.zip`
+          files: release-assets/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
