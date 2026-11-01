@@ -72,21 +72,17 @@ document.addEventListener('DOMContentLoaded', () => {
           day: 'numeric',
         });
 
-        if (statusText) statusText.textContent = `Release ${tag} officielle synchronisée (${pubDate})`;
-        if (heroTag) heroTag.textContent = `${tag} (Stable)`;
-        if (navTag) navTag.textContent = tag;
-        if (clTag) clTag.textContent = tag;
+        const displayTag = tag.startsWith('v') ? tag : `v${tag}`;
+
+        if (statusText) statusText.textContent = `Release ${displayTag} officielle synchronisée (${pubDate})`;
+        if (heroTag) heroTag.textContent = `${displayTag} (Stable)`;
+        if (navTag) navTag.textContent = displayTag;
+        if (clTag) clTag.textContent = displayTag;
         if (clDate) clDate.textContent = `Publiée le ${pubDate}`;
 
-        // If release body exists, show it
+        // If release body exists, render full Markdown
         if (latest.body && clBody) {
-          const lines = latest.body
-            .split('\n')
-            .filter((l) => l.trim().length > 0)
-            .slice(0, 10);
-          clBody.innerHTML = `<ul class="space-y-2 text-xs text-zinc-300 font-sans leading-relaxed">${lines
-            .map((line) => `<li class="flex items-start gap-2"><span class="text-[#ea3829] font-bold">●</span><span>${escapeHtml(line.replace(/^[*-]\s*/, ''))}</span></li>`)
-            .join('')}</ul>`;
+          clBody.innerHTML = `<div class="changelog-markdown">${renderMarkdown(latest.body)}</div>`;
         }
 
         // Map uploaded assets to buttons
@@ -100,17 +96,19 @@ document.addEventListener('DOMContentLoaded', () => {
               bindAsset('btnLinuxAppImage', 'sizeLinuxAppImage', url, size);
             } else if (name.endsWith('.deb')) {
               bindAsset('btnLinuxDeb', 'sizeLinuxDeb', url, size);
-            } else if (name.endsWith('.tar.gz') && name.includes('linux')) {
+            } else if (name.endsWith('.tar.gz')) {
               bindAsset('btnLinuxTar', 'sizeLinuxTar', url, size);
             } else if (name.endsWith('.dmg')) {
-              if (name.includes('arm64') || name.includes('apple')) {
+              if (name.includes('arm64') || name.includes('apple') || name.includes('aarch64')) {
                 bindAsset('btnMacArm', 'sizeMacArm', url, size);
               } else {
                 bindAsset('btnMacIntel', 'sizeMacIntel', url, size);
               }
+            } else if (name.endsWith('.zip') && (name.includes('mac') || name.includes('darwin') || name.includes('osx'))) {
+              bindAsset('btnMacZip', 'sizeMacZip', url, size);
             } else if (name.endsWith('.exe')) {
               bindAsset('btnWinExe', 'sizeWinExe', url, size);
-            } else if (name.endsWith('.zip') && name.includes('win')) {
+            } else if (name.endsWith('.zip') && (name.includes('win') || name.includes('windows'))) {
               bindAsset('btnWinZip', 'sizeWinZip', url, size);
             }
           });
@@ -137,10 +135,90 @@ document.addEventListener('DOMContentLoaded', () => {
     if (size) size.textContent = sizeText;
   }
 
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+  // Markdown renderer with marked.js + comprehensive standalone fallback
+  function renderMarkdown(md) {
+    if (!md) return '';
+
+    // If marked.js is available via CDN
+    if (typeof marked !== 'undefined' && typeof marked.parse === 'function') {
+      try {
+        return marked.parse(md, { gfm: true, breaks: true });
+      } catch (e) {
+        console.warn('marked.js parse failed, using fallback:', e);
+      }
+    }
+
+    // High quality offline fallback Markdown parser
+    let raw = md.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+    // Headers
+    raw = raw.replace(/^#### (.*$)/gim, '<h4>$1</h4>');
+    raw = raw.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+    raw = raw.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+    raw = raw.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+
+    // Bold, Italic & Strikethrough
+    raw = raw.replace(/\*\*\*(.*?)\*\*\*/gim, '<strong><em>$1</em></strong>');
+    raw = raw.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
+    raw = raw.replace(/\*(.*?)\*/gim, '<em>$1</em>');
+    raw = raw.replace(/~~(.*?)~~/gim, '<del>$1</del>');
+
+    // Inline Code
+    raw = raw.replace(/`([^`]+)`/gim, '<code>$1</code>');
+
+    // Markdown Links [text](url)
+    raw = raw.replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+    // Auto-link standalone URLs (excluding those already in href="...")
+    raw = raw.replace(/(^|[^"'])(https?:\/\/[^\s<]+)/gim, '$1<a href="$2" target="_blank" rel="noopener noreferrer">$2</a>');
+
+    // Process lists and paragraphs
+    const lines = raw.split('\n');
+    let inList = false;
+    let listType = 'ul';
+    const outputLines = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const ulMatch = line.match(/^\s*[-*+]\s+(.*)$/);
+      const olMatch = line.match(/^\s*(\d+)\.\s+(.*)$/);
+
+      if (ulMatch) {
+        if (!inList || listType !== 'ul') {
+          if (inList) outputLines.push(`</${listType}>`);
+          outputLines.push('<ul>');
+          inList = true;
+          listType = 'ul';
+        }
+        outputLines.push(`<li>${ulMatch[1]}</li>`);
+      } else if (olMatch) {
+        if (!inList || listType !== 'ol') {
+          if (inList) outputLines.push(`</${listType}>`);
+          outputLines.push('<ol>');
+          inList = true;
+          listType = 'ol';
+        }
+        outputLines.push(`<li>${olMatch[2]}</li>`);
+      } else {
+        if (inList) {
+          outputLines.push(`</${listType}>`);
+          inList = false;
+        }
+        const trimmed = line.trim();
+        if (trimmed.length > 0) {
+          if (trimmed.startsWith('<h') || trimmed.startsWith('<hr') || trimmed.startsWith('<blockquote') || trimmed.startsWith('<pre') || trimmed.startsWith('<ul') || trimmed.startsWith('<ol')) {
+            outputLines.push(trimmed);
+          } else {
+            outputLines.push(`<p>${trimmed}</p>`);
+          }
+        }
+      }
+    }
+    if (inList) {
+      outputLines.push(`</${listType}>`);
+    }
+
+    return outputLines.join('\n');
   }
 
   fetchGitHubReleases();
