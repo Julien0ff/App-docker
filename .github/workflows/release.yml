@@ -4,11 +4,13 @@ on:
   push:
     tags:
       - 'v*'
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
       tag_name:
         description: 'Tag de version (ex: v26.1)'
-        required: true
+        required: false
         default: 'v26.1'
 
 permissions:
@@ -52,10 +54,10 @@ jobs:
 
       - name: Publish Release Assets to GitHub
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' || github.event_name == 'release'
         with:
-          tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
-          name: Dock (1) ${{ github.event.inputs.tag_name || github.ref_name }}
+          tag_name: ${{ github.event.inputs.tag_name || github.event.release.tag_name || github.ref_name }}
+          name: Dock (1) ${{ github.event.inputs.tag_name || github.event.release.tag_name || github.ref_name }}
           draft: false
           prerelease: false
           generate_release_notes: true

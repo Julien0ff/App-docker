@@ -12,7 +12,7 @@
 ---
 
 <div align="center">
-  <img src="file:///home/foxy/.gemini/antigravity-ide/brain/236a82ac-0c82-4c12-8c03-9cee236b2a9d/dark_dashboard_1793472170086.png" alt="Dock (1) Interface" width="92%" style="border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.4);" />
+  <img src="docs/assets/dashboard-preview.png" alt="Dock (1) Interface" width="92%" style="border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.4);" />
 </div>
 
 ---

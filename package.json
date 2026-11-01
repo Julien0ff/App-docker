@@ -2,6 +2,12 @@
   "name": "dock-one",
   "version": "26.1.0",
   "description": "Dock (1) — Minimalist Docker & Compose Manager inspired by Nothing OS",
+  "author": "Julien0ff <contact@thefoxy.me>",
+  "homepage": "https://docker.thefoxy.me",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Julien0ff/App-docker.git"
+  },
   "main": "electron/main.js",
   "scripts": {
     "dev": "concurrently -n \"api,web\" -c \"cyan,magenta\" \"node server/index.js\" \"vite\"",
@@ -9,10 +15,10 @@
     "start": "NODE_ENV=production node server/index.js",
     "app": "electron .",
     "app:dev": "concurrently -n \"api,web,electron\" -c \"cyan,magenta,yellow\" \"node server/index.js\" \"vite\" \"electron .\"",
-    "app:dist": "npm run build && electron-builder",
-    "app:dist:linux": "npm run build && electron-builder --linux deb AppImage tar.gz",
-    "app:dist:mac": "npm run build && electron-builder --mac dmg zip",
-    "app:dist:win": "npm run build && electron-builder --win nsis zip",
+    "app:dist": "npm run build && electron-builder --publish never",
+    "app:dist:linux": "npm run build && electron-builder --linux deb AppImage tar.gz --publish never",
+    "app:dist:mac": "npm run build && electron-builder --mac dmg zip --publish never",
+    "app:dist:win": "npm run build && electron-builder --win nsis zip --publish never",
     "service:setup": "bash scripts/setup-service.sh"
   },
   "keywords": [],
@@ -63,7 +69,8 @@
         "deb",
         "tar.gz"
       ],
-      "category": "Development"
+      "category": "Development",
+      "maintainer": "Julien0ff <contact@thefoxy.me>"
     },
     "mac": {
       "target": [
