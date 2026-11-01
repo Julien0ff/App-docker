@@ -18,7 +18,7 @@ export const PreloadScreen: React.FC<PreloadScreenProps> = ({ isReady, onFinish 
       { delay: 180, progress: 38, log: '[SOCKET] Probing /var/run/docker.sock... CONNECTED' },
       { delay: 420, progress: 68, log: '[COMPOSE] Indexing Docker stacks & clusters... OK' },
       { delay: 720, progress: 92, log: '[NOTIFY] Discord dispatcher & systemd service... READY' },
-      { delay: 980, progress: 100, log: '[DOCK-ONE] Kernel v26.1 online • 127.0.0.1:4500' },
+      { delay: 980, progress: 100, log: '[DOCK-ONE] Kernel v26.2 online • 127.0.0.1:4500' },
     ];
 
     const timeouts = sequence.map((item) =>
@@ -69,7 +69,7 @@ export const PreloadScreen: React.FC<PreloadScreenProps> = ({ isReady, onFinish 
             DOCK (1)
           </span>
           <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-zinc-300 border border-white/15">
-            v26.1
+            v26.2
           </span>
         </div>
         <p className="font-mono text-[11px] tracking-widest text-zinc-400 uppercase mb-8">

@@ -209,7 +209,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     : 'bg-light-card dark:bg-nothing-card text-zinc-500 border border-light-border dark:border-nothing-border'
                 }`}
               >
-                {updateInfo?.hasUpdate ? `v${updateInfo.latestVersion} !` : 'v26.1'}
+                {updateInfo?.hasUpdate ? `v${updateInfo.latestVersion} !` : 'v26.2'}
               </span>
             </button>
           )}
@@ -225,7 +225,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span>{t.landingPage}</span>
             </div>
             <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-nothing-red/10 text-nothing-red font-bold">
-              v26.1
+              v26.2
             </span>
           </a>
         </div>

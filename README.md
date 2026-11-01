@@ -1,8 +1,8 @@
 # Dock (1) — Local Container Control Deck
-> **v26.1** • Minimalist Docker & Compose Management Deck inspired by **Nothing OS** & **Teenage Engineering**.
+> **v26.2** • Minimalist Docker & Compose Management Deck inspired by **Nothing OS** & **Teenage Engineering**.
 
 [![Website](https://img.shields.io/badge/Website-docker.thefoxy.me-ea3829?style=flat-square)](https://docker.thefoxy.me)
-[![Version](https://img.shields.io/badge/Release-v26.1-black?style=flat-square&logo=docker&logoColor=white)](https://github.com/Julien0ff/App-docker/releases)
+[![Version](https://img.shields.io/badge/Release-v26.2-black?style=flat-square&logo=docker&logoColor=white)](https://github.com/Julien0ff/App-docker/releases)
 [![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20Windows-black?style=flat-square)](https://docker.thefoxy.me#downloads)
 [![GitHub](https://img.shields.io/badge/GitHub-Julien0ff%2FApp--docker-18181b?style=flat-square&logo=github)](https://github.com/Julien0ff/App-docker)
 [![License](https://img.shields.io/badge/License-MIT-080809?style=flat-square)](LICENSE)
@@ -39,7 +39,7 @@
    - **Rapports d'état & Uptime** : bouton dédié pour envoyer un digest instantané de la santé et du temps de fonctionnement de vos services sur Discord.
 
 4. **Système de Version CalVer & Mise à Jour Automatique** :
-   - Versionnement **`26.1`** (Année `26` : 2026, Version `1`).
+   - Versionnement **`26.2`** (Année `26` : 2026, Version `2`).
    - Détection automatique des nouvelles releases GitHub avec bannière de notification et lien direct.
 
 5. **Multiplateforme & Bilingue (FR / EN)** :
@@ -125,7 +125,7 @@ npm run dev
    - **Live Health & Uptime Digests**: on-demand status reporting embedded with uptime tracking delivered to your Discord channel.
 
 4. **CalVer Scheme & GitHub Auto-Update Alerts**:
-   - Versioning **`26.1`** (Year `26`: 2026, Release `1`).
+   - Versioning **`26.2`** (Year `26`: 2026, Release `2`).
    - Built-in GitHub Releases checker querying for new tags and notifying you in the header.
 
 5. **Multiplatform & Fully Bilingual (FR / EN)**:
@@ -164,8 +164,8 @@ Automated GitHub Actions workflow (`.github/workflows/release.yml`) builds and p
 
 To create a new release:
 ```bash
-git tag v26.1
-git push origin v26.1
+git tag v26.2
+git push origin v26.2
 ```
 
 ---

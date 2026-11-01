@@ -68,7 +68,7 @@ function postToDiscord(webhookUrl, payload) {
         headers: {
           'Content-Type': 'application/json',
           'Content-Length': Buffer.byteLength(postData),
-          'User-Agent': 'Dock-1-Docker-Manager/26.1',
+          'User-Agent': 'Dock-1-Docker-Manager/26.2',
         },
       };
 
@@ -139,7 +139,7 @@ async function testWebhook(webhookUrl, channelName = 'Salon Discord') {
           },
         ],
         footer: {
-          text: 'Dock (1) • Docker Manager v26.1',
+          text: 'Dock (1) • Docker Manager v26.2',
         },
         timestamp: new Date().toISOString(),
       },
@@ -224,7 +224,7 @@ async function sendDigestReport(webhookOrUrl, containers = []) {
           },
         ],
         footer: {
-          text: `Dock (1) • Rapport d'Uptime & Santé v26.1 • ${scopeLabel}`,
+          text: `Dock (1) • Rapport d'Uptime & Santé v26.2 • ${scopeLabel}`,
         },
         timestamp: new Date().toISOString(),
       },
@@ -407,7 +407,7 @@ async function notify(event, container, extra = {}) {
           color,
           fields,
           footer: {
-            text: `Dock (1) • Événement ${event.toUpperCase()} • v26.1`,
+            text: `Dock (1) • Événement ${event.toUpperCase()} • v26.2`,
           },
           timestamp: new Date().toISOString(),
         },

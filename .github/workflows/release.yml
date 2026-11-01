@@ -9,9 +9,9 @@ on:
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Tag de version (ex: v26.1)'
+        description: 'Tag de version (ex: v26.2)'
         required: false
-        default: 'v26.1'
+        default: 'v26.2'
 
 permissions:
   contents: write
