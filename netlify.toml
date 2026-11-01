@@ -1,5 +1,11 @@
 [build]
   publish = "landing"
+  command = "echo 'Dock (1) static landing ready for deployment'"
+
+[[redirects]]
+  from = "/landing-assets/*"
+  to = "/:splat"
+  status = 200
 
 [[redirects]]
   from = "/*"

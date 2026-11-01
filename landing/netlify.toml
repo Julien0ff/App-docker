@@ -1,7 +1,21 @@
 [build]
   publish = "."
+  command = "echo 'Dock (1) static landing ready for deployment'"
+
+[[redirects]]
+  from = "/landing-assets/*"
+  to = "/:splat"
+  status = 200
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
