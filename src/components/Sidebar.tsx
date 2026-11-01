@@ -215,7 +215,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           )}
 
           <a
-            href="/landing"
+            href="https://docker.thefoxy.me"
             target="_blank"
             rel="noopener noreferrer"
             className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:bg-light-hover dark:hover:bg-nothing-subcard border border-light-border/60 dark:border-nothing-border/60 btn-press group"

@@ -1,9 +1,10 @@
 # Dock (1) — Local Container Control Deck
 > **v26.1** • Minimalist Docker & Compose Management Deck inspired by **Nothing OS** & **Teenage Engineering**.
 
-[![Version](https://img.shields.io/badge/CalVer-26.1-ea3829?style=flat-square&logo=docker&logoColor=white)](https://github.com/foxy/dock-one)
-[![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20Windows-black?style=flat-square)](https://github.com/foxy/dock-one)
-[![i18n](https://img.shields.io/badge/i18n-FR%20%7C%20EN-white?style=flat-square)](https://github.com/foxy/dock-one)
+[![Website](https://img.shields.io/badge/Website-docker.thefoxy.me-ea3829?style=flat-square)](https://docker.thefoxy.me)
+[![Version](https://img.shields.io/badge/Release-v26.1-black?style=flat-square&logo=docker&logoColor=white)](https://github.com/Julien0ff/App-docker/releases)
+[![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20Windows-black?style=flat-square)](https://docker.thefoxy.me#downloads)
+[![GitHub](https://img.shields.io/badge/GitHub-Julien0ff%2FApp--docker-18181b?style=flat-square&logo=github)](https://github.com/Julien0ff/App-docker)
 [![License](https://img.shields.io/badge/License-MIT-080809?style=flat-square)](LICENSE)
 
 [**Français**](#-version-française) • [**English**](#-english-version)
