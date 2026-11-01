@@ -20,7 +20,7 @@
 # 🇫🇷 Version Française
 
 ### Présentation
-**Dock (1)** est une interface graphique de contrôle pour vos conteneurs et stacks Docker, pensée pour allier une esthétique épurée (noir profond `#080809`, rouge diode `#ea3829`, typographie géométrique, micro-animations tactiles) à des fonctionnalités d'administration complètes, sans jamais dépendre de la ligne de commande.
+**Dock (1)** est une interface graphique de contrôle pour vos conteneurs et stacks Docker, pensée pour allier une esthétique épurée à des fonctionnalités d'administration complètes, sans jamais dépendre de la ligne de commande.
 
 ### 🌟 Fonctionnalités
 
@@ -106,7 +106,7 @@ npm run dev
 # 🇬🇧 English Version
 
 ### Overview
-**Dock (1)** is a local management control deck for Docker containers and compose stacks, crafted with a high-end minimalist design inspired by **Nothing OS** and **Teenage Engineering** (deep `#080809` blacks, `#ea3829` indicator diode, geometric monospace accents, snappy tactile physics).
+**Dock (1)** is a local management control deck for Docker containers and compose stacks, crafted with a high-end minimalist design inspired by **Nothing OS**.
 
 ### 🌟 Key Features
 
