@@ -786,6 +786,13 @@ app.get('/api/system/check-updates', (req, res) => {
     timeout: 4000,
   };
 
+  let responded = false;
+  const sendOnce = (payload) => {
+    if (responded) return;
+    responded = true;
+    res.json(payload);
+  };
+
   const reqGit = https.get(options, (gitRes) => {
     let data = '';
     gitRes.on('data', (d) => (data += d));
@@ -795,7 +802,7 @@ app.get('/api/system/check-updates', (req, res) => {
           const rel = JSON.parse(data);
           const tag = rel.tag_name ? rel.tag_name.replace(/^v/, '') : currentVersion;
           const hasUpdate = tag !== currentVersion && !currentVersion.startsWith(tag);
-          return res.json({
+          return sendOnce({
             success: true,
             currentVersion,
             latestVersion: tag,
@@ -808,16 +815,16 @@ app.get('/api/system/check-updates', (req, res) => {
           });
         }
       } catch (_) {}
-      res.json({ success: true, currentVersion, latestVersion: currentVersion, hasUpdate: false });
+      sendOnce({ success: true, currentVersion, latestVersion: currentVersion, hasUpdate: false });
     });
   });
 
   reqGit.on('error', () => {
-    res.json({ success: true, currentVersion, latestVersion: currentVersion, hasUpdate: false });
+    sendOnce({ success: true, currentVersion, latestVersion: currentVersion, hasUpdate: false });
   });
   reqGit.on('timeout', () => {
     reqGit.destroy();
-    res.json({ success: true, currentVersion, latestVersion: currentVersion, hasUpdate: false });
+    sendOnce({ success: true, currentVersion, latestVersion: currentVersion, hasUpdate: false });
   });
 });
 
@@ -826,14 +833,16 @@ const distPath = path.join(__dirname, '..', 'dist');
 app.use(express.static(distPath));
 
 // Landing page route
-const landingPath = path.join(__dirname, '..', 'landing', 'index.html');
+const landingDir = path.join(__dirname, '..', 'landing');
+const landingPath = path.join(landingDir, 'index.html');
+app.use('/landing', express.static(landingDir));
 app.get('/landing', (req, res) => {
   if (fs.existsSync(landingPath)) {
     return res.sendFile(landingPath);
   }
   res.redirect('/');
 });
-app.use('/landing-assets', express.static(path.join(__dirname, '..', 'landing')));
+app.use('/landing-assets', express.static(landingDir));
 
 // Fallback for SPA routing
 app.use((req, res) => {

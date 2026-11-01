@@ -334,12 +334,12 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                     <Sparkles size={16} />
                   </div>
                   <h3 className="font-semibold text-sm">
-                    {lang === 'fr' ? 'Autostart au Boot (Systemd)' : 'Boot Autostart (Systemd)'}
+                    {lang === 'fr' ? 'Démarrage Automatique (Multi-OS)' : 'System Autostart (Multi-OS)'}
                   </h3>
                   <p className="text-xs text-zinc-500 leading-relaxed">
                     {lang === 'fr'
-                      ? 'Activez Dock (1) en tâche de fond au démarrage de l\'ordinateur, même sans session utilisateur ouverte.'
-                      : 'Run Dock (1) automatically on system boot in user mode, even before logging in.'}
+                      ? 'Activez Dock (1) en tâche de fond au démarrage de l\'ordinateur sous Linux (systemd), macOS (Launchd) ou Windows (Démarrage).'
+                      : 'Run Dock (1) automatically on system boot under Linux (systemd), macOS (Launchd), or Windows (Startup).'}
                   </p>
                 </div>
               </div>

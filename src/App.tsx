@@ -655,6 +655,8 @@ export const App: React.FC = () => {
         systemd={systemInfo?.systemd}
         isToggling={isAutostartToggling}
         onToggle={handleToggleAutostart}
+        hostPlatform={systemInfo?.host?.platform}
+        lang={lang}
       />
 
       {/* App & System Updates Modal */}

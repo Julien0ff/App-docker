@@ -83,10 +83,10 @@ export const StatsBento: React.FC<StatsBentoProps> = ({
           <div className="flex items-center justify-between mb-4">
             <span className="text-xs font-mono tracking-wider uppercase text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
               <Activity size={14} className="text-zinc-600 dark:text-zinc-300" />
-              Machine Hôte (Arch Linux)
+              Machine Hôte ({host?.platform === 'darwin' ? 'macOS' : host?.platform === 'win32' ? 'Windows' : host?.platform === 'linux' ? 'Linux' : (host?.platform || 'Hôte')})
             </span>
             <span className="text-[10px] font-mono text-zinc-400 dark:text-zinc-300 truncate max-w-[140px]">
-              {host?.cpuModel.split(' ')[0] || 'Linux'}
+              {host?.cpuModel.split(' ')[0] || (host?.platform === 'darwin' ? 'Apple Silicon' : 'CPU')} {host?.arch ? `• ${host.arch}` : ''}
             </span>
           </div>
 

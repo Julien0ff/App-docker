@@ -1,4 +1,4 @@
-// Interactive and Dynamic GitHub Releases Integration for Dock (1) Landing Page
+// Interactive and Dynamic GitHub Releases Integration & Animations for Dock (1) Landing Page
 
 document.addEventListener('DOMContentLoaded', () => {
   const GITHUB_REPO = 'Julien0ff/App-docker';
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
       navChangelog: 'Changelog',
       btnDownloadApp: "Télécharger l'App",
       btnHeroDownload: "Télécharger l'Application",
-      releaseWaiting: 'v26.1 prête pour publication sur GitHub',
+      releaseWaiting: 'Version v26.1 disponible • Linux, macOS & Windows',
       releaseLive: (tag, date) => `${tag} disponible sur GitHub (publiée le ${date})`,
     },
     en: {
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
       navChangelog: 'Changelog',
       btnDownloadApp: 'Download App',
       btnHeroDownload: 'Download Application',
-      releaseWaiting: 'v26.1 ready for release on GitHub',
+      releaseWaiting: 'Version v26.1 ready • Linux, macOS & Windows',
       releaseLive: (tag, date) => `${tag} live on GitHub (released on ${date})`,
     }
   };
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (statusText) statusText.textContent = `Release ${tag} officielle synchronisée (${pubDate})`;
-        if (heroTag) heroTag.textContent = `${tag} (GitHub Release)`;
+        if (heroTag) heroTag.textContent = `${tag} (Stable)`;
         if (navTag) navTag.textContent = tag;
         if (clTag) clTag.textContent = tag;
         if (clDate) clDate.textContent = `Publiée le ${pubDate}`;
@@ -117,13 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } else {
         if (statusText) {
-          statusText.textContent = 'v26.1 — Prêt pour publication GitHub Actions';
+          statusText.textContent = 'Version v26.1 • Installateurs Linux, macOS & Windows';
         }
       }
     } catch (err) {
-      console.warn('[Landing] Note: GitHub API offline or rate-limited:', err.message);
       if (statusText) {
-        statusText.textContent = 'Version 26.1 (CalVer) • Dépôt Julien0ff/App-docker';
+        statusText.textContent = 'Version v26.1 • Linux, macOS & Windows';
       }
     }
   }
@@ -145,4 +144,160 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   fetchGitHubReleases();
+
+  // Scroll Reveal Animations
+  const reveals = document.querySelectorAll('.reveal-on-scroll');
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    reveals.forEach((el) => observer.observe(el));
+  } else {
+    reveals.forEach((el) => el.classList.add('is-revealed'));
+  }
+
+  // Interactive Live Preview Mockup Tabs
+  const previewData = {
+    containers: `
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-fade-in">
+        <div class="p-5 rounded-2xl bg-zinc-900/60 border border-zinc-800 hover:border-zinc-700 transition-colors flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-mono text-xs text-zinc-300 font-bold">nextcloud-server</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">● En cours</span>
+            </div>
+            <p class="text-[11px] font-mono text-zinc-500">nextcloud:28.0-apache</p>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">:8080</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">:8443</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs font-mono">
+            <span class="text-zinc-500">CPU 1.2% • 182 MB</span>
+            <span class="text-zinc-400">Stack: cloud</span>
+          </div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-zinc-900/60 border border-zinc-800 hover:border-zinc-700 transition-colors flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-mono text-xs text-zinc-300 font-bold">postgres-cluster</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">● En cours</span>
+            </div>
+            <p class="text-[11px] font-mono text-zinc-500">postgres:16-alpine</p>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">:5432</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs font-mono">
+            <span class="text-zinc-500">CPU 0.4% • 94 MB</span>
+            <span class="text-zinc-400">Stack: database</span>
+          </div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-zinc-900/60 border border-zinc-800 hover:border-zinc-700 transition-colors flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-mono text-xs text-zinc-300 font-bold">ghost-blog</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">▲ Màj dispo</span>
+            </div>
+            <p class="text-[11px] font-mono text-zinc-500">ghost:5-alpine</p>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">:2368</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs font-mono">
+            <span class="text-zinc-500">CPU 0.1% • 120 MB</span>
+            <span class="text-[#ea3829] font-semibold">1-Click Pull</span>
+          </div>
+        </div>
+      </div>
+    `,
+    stacks: `
+      <div class="p-5 rounded-2xl bg-zinc-900/60 border border-zinc-800 font-mono text-xs animate-fade-in space-y-3">
+        <div class="flex items-center justify-between pb-3 border-b border-zinc-800">
+          <div class="flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+            <span class="text-white font-bold text-sm">Stack: production-web (3 services)</span>
+          </div>
+          <span class="text-[11px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-400">docker-compose.yml</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="p-3 rounded-xl bg-zinc-950 border border-zinc-800 flex justify-between items-center">
+            <span class="text-zinc-300">traefik-proxy</span>
+            <span class="text-emerald-400 text-[10px]">● 80/443</span>
+          </div>
+          <div class="p-3 rounded-xl bg-zinc-950 border border-zinc-800 flex justify-between items-center">
+            <span class="text-zinc-300">api-backend</span>
+            <span class="text-emerald-400 text-[10px]">● :5000</span>
+          </div>
+          <div class="p-3 rounded-xl bg-zinc-950 border border-zinc-800 flex justify-between items-center">
+            <span class="text-zinc-300">redis-cache</span>
+            <span class="text-emerald-400 text-[10px]">● :6379</span>
+          </div>
+        </div>
+      </div>
+    `,
+    logs: `
+      <div class="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 font-mono text-[11px] text-zinc-300 leading-relaxed animate-fade-in select-text space-y-1.5 overflow-x-auto">
+        <div class="text-zinc-500">// Flux de logs Docker en direct (Streaming WebSocket)</div>
+        <div><span class="text-zinc-500">2026-11-01T00:14:02.102Z</span> <span class="text-emerald-400">[INFO]</span> [traefik] Configuration reloaded successfully</div>
+        <div><span class="text-zinc-500">2026-11-01T00:14:03.441Z</span> <span class="text-blue-400">[HTTP]</span> GET /api/v1/containers 200 OK (1.4ms)</div>
+        <div><span class="text-zinc-500">2026-11-01T00:14:04.912Z</span> <span class="text-amber-400">[WARN]</span> [redis-cache] DB 0: 14 keys evicted by maxmemory-policy</div>
+        <div><span class="text-zinc-500">2026-11-01T00:14:05.100Z</span> <span class="text-[#ea3829]">[WEBHOOK]</span> Discord alert sent: "ghost-blog is up to date"</div>
+      </div>
+    `,
+    compose: `
+      <div class="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 font-mono text-xs text-zinc-300 animate-fade-in select-text overflow-x-auto space-y-1">
+        <div class="flex items-center justify-between pb-2 border-b border-zinc-800 mb-2">
+          <span class="text-zinc-400">Éditeur YAML en direct</span>
+          <span class="text-[10px] text-emerald-400">Syntaxe valide ✓</span>
+        </div>
+        <div class="text-zinc-500">services:</div>
+        <div class="pl-4 text-purple-400">web-service:</div>
+        <div class="pl-8 text-zinc-400">image: <span class="text-emerald-400">nginx:alpine</span></div>
+        <div class="pl-8 text-zinc-400">restart: <span class="text-amber-300">unless-stopped</span></div>
+        <div class="pl-8 text-zinc-400">ports:</div>
+        <div class="pl-12 text-zinc-300">- <span class="text-blue-400">"80:80"</span></div>
+      </div>
+    `
+  };
+
+  const previewContainer = document.getElementById('previewDynamicContent');
+  const tabs = document.querySelectorAll('.preview-tab-btn');
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const target = tab.getAttribute('data-tab');
+      if (previewData[target] && previewContainer) {
+        tabs.forEach((t) => {
+          t.classList.remove('bg-zinc-800', 'text-white', 'font-bold', 'border-zinc-700');
+          t.classList.add('bg-zinc-900', 'text-zinc-400', 'border-zinc-800');
+        });
+        tab.classList.remove('bg-zinc-900', 'text-zinc-400', 'border-zinc-800');
+        tab.classList.add('bg-zinc-800', 'text-white', 'font-bold', 'border-zinc-700');
+
+        previewContainer.innerHTML = previewData[target];
+      }
+    });
+  });
+
+  // Dynamic Telemetry Animation (subtle realistic fluctuation)
+  const ramDisplay = document.getElementById('mockupRamVal');
+  if (ramDisplay) {
+    setInterval(() => {
+      const baseRam = 8.42;
+      const variation = (Math.random() * 0.08 - 0.04).toFixed(2);
+      const newRam = (baseRam + parseFloat(variation)).toFixed(2);
+      ramDisplay.innerHTML = `${newRam} <span class="text-xs text-zinc-500 font-mono">/ 31.2 GB</span>`;
+    }, 3500);
+  }
 });

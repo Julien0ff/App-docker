@@ -180,21 +180,72 @@ button:active, .btn-primary:active, a:active {
   .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
-/* Animations */
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+/* Rich Modern Nothing OS Animations */
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
 }
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.animate-float-slow {
+  animation: floatSlow 5s ease-in-out infinite;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes diodeGlow {
+  0%, 100% { box-shadow: 0 0 8px #ea3829, 0 0 20px rgba(234, 56, 41, 0.4); opacity: 1; }
+  50% { box-shadow: 0 0 3px #ea3829, 0 0 8px rgba(234, 56, 41, 0.2); opacity: 0.7; }
 }
-.animate-fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
+.animate-diode {
+  animation: diodeGlow 2.5s ease-in-out infinite;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(1000%); }
+}
+.scanline-sweep {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(234, 56, 41, 0.6), transparent);
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+}
+
+/* Card hover glow & 3D tactile lift */
+.feature-card, .download-card {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.feature-card:hover, .download-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(234, 56, 41, 0.4) !important;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 25px rgba(234, 56, 41, 0.1);
+}
+
+/* Scroll reveal trigger classes */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Dot matrix marquee banner */
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.marquee-content {
+  display: inline-flex;
+  animation: marquee 25s linear infinite;
+}
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
 }
 
 /* Red accents */
