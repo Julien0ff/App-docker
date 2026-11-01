@@ -11,29 +11,12 @@ export const Logo: React.FC<LogoProps> = ({ size = 'md', className = '', subtitl
 
   return (
     <div className={`flex items-center gap-3 select-none ${className}`}>
-      {/* Nothing Hardware-inspired Icon */}
+      {/* Nothing Hardware-inspired Icon (Official Landing Identity) */}
       <div
-        className="relative rounded-2xl bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 flex items-center justify-center shadow-md overflow-hidden border border-zinc-800 dark:border-zinc-200 transition-transform duration-200 hover:scale-105"
+        className="rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center relative overflow-hidden transition-all duration-200 hover:border-[#ea3829] shadow-sm shrink-0"
         style={{ width: iconSize, height: iconSize }}
       >
-        {/* Subtle internal dot matrix glyph */}
-        <svg
-          viewBox="0 0 32 32"
-          className="w-5 h-5 fill-current opacity-90"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {/* Outer glyph frame */}
-          <rect x="5" y="5" width="22" height="22" rx="6" fill="none" stroke="currentColor" strokeWidth="2.2" />
-          {/* Inner dots representing containers in a Nothing matrix */}
-          <circle cx="11" cy="11" r="1.8" />
-          <circle cx="21" cy="11" r="1.8" />
-          <circle cx="11" cy="21" r="1.8" />
-          {/* Signature Nothing Red diode */}
-          <circle cx="21" cy="21" r="2.2" fill="#ea3829" className="animate-pulse-subtle" />
-        </svg>
-
-        {/* Diagonal hardware highlight */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none" />
+        <div className="w-2.5 h-2.5 rounded-full bg-[#ea3829] shadow-[0_0_12px_#ea3829] animate-pulse-subtle" />
       </div>
 
       {/* Typography: Nothing OS styled title */}
