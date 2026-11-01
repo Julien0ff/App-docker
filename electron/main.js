@@ -54,6 +54,7 @@ async function startServerIfNeeded() {
 }
 
 function createWindow() {
+  const iconPath = path.join(__dirname, 'icon.png');
   mainWindow = new BrowserWindow({
     width: 1400,
     height: 900,
@@ -61,6 +62,7 @@ function createWindow() {
     minHeight: 700,
     backgroundColor: '#090a0c',
     title: 'Dock (1) — Docker Manager',
+    icon: iconPath,
     show: false,
     autoHideMenuBar: true,
     webPreferences: {

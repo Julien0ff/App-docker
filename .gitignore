@@ -5,7 +5,6 @@ node_modules/
 
 # Production build outputs
 dist/
-build/
 release/
 release-pkg/
 release-assets/

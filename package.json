@@ -55,8 +55,10 @@
     "appId": "com.julien0ff.dockone",
     "productName": "Dock (1)",
     "directories": {
-      "output": "release"
+      "output": "release",
+      "buildResources": "build"
     },
+    "icon": "build/icon.png",
     "files": [
       "dist/**/*",
       "server/**/*",
@@ -69,6 +71,7 @@
         "deb",
         "tar.gz"
       ],
+      "icon": "build/icons",
       "category": "Development",
       "maintainer": "Julien0ff <contact@thefoxy.me>"
     },
@@ -77,13 +80,15 @@
         "dmg",
         "zip"
       ],
+      "icon": "build/icon.png",
       "category": "public.app-category.developer-tools"
     },
     "win": {
       "target": [
         "nsis",
         "zip"
-      ]
+      ],
+      "icon": "build/icon.ico"
     }
   }
 }

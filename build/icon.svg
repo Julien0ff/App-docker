@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#16181d"/>
+      <stop offset="50%" stop-color="#0c0d10"/>
+      <stop offset="100%" stop-color="#050607"/>
+    </linearGradient>
+
+    <!-- Glass Reflection Gradient -->
+    <linearGradient id="glassReflect" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.12"/>
+      <stop offset="35%" stop-color="#ffffff" stop-opacity="0.04"/>
+      <stop offset="60%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Diode Glow Filter -->
+    <filter id="diodeGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="32" result="blur1" />
+      <feGaussianBlur stdDeviation="16" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur1" />
+        <feMergeNode in="blur2" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Outer Shadow Filter -->
+    <filter id="dropShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="24" stdDeviation="32" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+
+    <!-- Red Diode Gradient -->
+    <radialGradient id="redDiode" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#ff7b6e" />
+      <stop offset="45%" stop-color="#ea3829" />
+      <stop offset="85%" stop-color="#a81e13" />
+      <stop offset="100%" stop-color="#540b05" />
+    </radialGradient>
+
+    <!-- White Node Gradient -->
+    <linearGradient id="whiteNode" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#c4c4c8" />
+    </linearGradient>
+
+    <!-- Dot Pattern -->
+    <pattern id="dotGrid" x="0" y="0" width="48" height="48" patternUnits="userSpaceOnUse">
+      <circle cx="24" cy="24" r="2.5" fill="#ffffff" opacity="0.08" />
+    </pattern>
+  </defs>
+
+  <!-- Base Squircle with Shadow -->
+  <rect x="48" y="48" width="928" height="928" rx="220" ry="220" fill="url(#bgGrad)" filter="url(#dropShadow)" />
+  <rect x="48" y="48" width="928" height="928" rx="220" ry="220" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="4" />
+
+  <!-- Internal Dot Matrix Texture -->
+  <rect x="80" y="80" width="864" height="864" rx="180" ry="180" fill="url(#dotGrid)" />
+
+  <!-- Hardware Frame (Nothing OS Glyph) -->
+  <rect x="200" y="200" width="624" height="624" rx="140" ry="140" fill="none" stroke="#27272a" stroke-width="24" />
+  <rect x="200" y="200" width="624" height="624" rx="140" ry="140" fill="none" stroke="#3f3f46" stroke-width="2" stroke-opacity="0.5" />
+
+  <!-- Circuit Interconnects -->
+  <line x1="372" y1="372" x2="652" y2="372" stroke="#27272a" stroke-width="12" stroke-dasharray="16 16" />
+  <line x1="372" y1="372" x2="372" y2="652" stroke="#27272a" stroke-width="12" stroke-dasharray="16 16" />
+  <line x1="652" y1="372" x2="652" y2="652" stroke="#27272a" stroke-width="12" stroke-dasharray="16 16" />
+  <line x1="372" y1="652" x2="652" y2="652" stroke="#27272a" stroke-width="12" stroke-dasharray="16 16" />
+
+  <!-- Node 1: Top-Left (Container Active) -->
+  <g>
+    <circle cx="372" cy="372" r="76" fill="#18181b" stroke="#ffffff" stroke-opacity="0.2" stroke-width="4" />
+    <circle cx="372" cy="372" r="54" fill="url(#whiteNode)" />
+    <circle cx="354" cy="354" r="16" fill="#ffffff" opacity="0.6" />
+  </g>
+
+  <!-- Node 2: Top-Right (Container Active) -->
+  <g>
+    <circle cx="652" cy="372" r="76" fill="#18181b" stroke="#ffffff" stroke-opacity="0.2" stroke-width="4" />
+    <circle cx="652" cy="372" r="54" fill="url(#whiteNode)" />
+    <circle cx="634" cy="354" r="16" fill="#ffffff" opacity="0.6" />
+  </g>
+
+  <!-- Node 3: Bottom-Left (Container Active) -->
+  <g>
+    <circle cx="372" cy="652" r="76" fill="#18181b" stroke="#ffffff" stroke-opacity="0.2" stroke-width="4" />
+    <circle cx="372" cy="652" r="54" fill="url(#whiteNode)" />
+    <circle cx="354" cy="634" r="16" fill="#ffffff" opacity="0.6" />
+  </g>
+
+  <!-- Node 4: Bottom-Right (Nothing Red Pulse Diode) -->
+  <g>
+    <!-- Outer ambient red halo -->
+    <circle cx="652" cy="652" r="110" fill="#ea3829" opacity="0.25" filter="url(#diodeGlow)" />
+    <circle cx="652" cy="652" r="82" fill="#1e0a08" stroke="#ea3829" stroke-width="5" />
+    <circle cx="652" cy="652" r="62" fill="url(#redDiode)" filter="url(#diodeGlow)" />
+    <!-- Hot core diode specular -->
+    <circle cx="636" cy="636" r="18" fill="#ffffff" opacity="0.75" />
+  </g>
+
+  <!-- Center Status Micro-Glyph -->
+  <g opacity="0.65">
+    <circle cx="512" cy="512" r="28" fill="none" stroke="#52525b" stroke-width="4" />
+    <circle cx="512" cy="512" r="8" fill="#ea3829" />
+  </g>
+
+  <!-- Glossy Diagonal Glass Sweep -->
+  <path d="M 48 268 C 48 146 146 48 268 48 L 976 48 L 48 976 Z" fill="url(#glassReflect)" />
+</svg>
