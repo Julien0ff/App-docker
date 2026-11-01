@@ -466,14 +466,34 @@ app.get('/api/webhooks', (req, res) => {
 
 app.post('/api/webhooks', (req, res) => {
   try {
-    const { name, url, events, enabled } = req.body;
+    const {
+      name,
+      url,
+      events,
+      enabled,
+      targetScope,
+      targetStacks,
+      targetContainers,
+      includeUptime,
+      includeStatus,
+    } = req.body;
     if (!url || typeof url !== 'string' || !url.startsWith('https://discord.com/api/webhooks/')) {
       return res.status(400).json({
         success: false,
         error: "L'URL doit être un webhook Discord HTTPS valide (ex: https://discord.com/api/webhooks/123/abc...)",
       });
     }
-    const created = webhookManager.createWebhook({ name, url, events, enabled });
+    const created = webhookManager.createWebhook({
+      name,
+      url,
+      events,
+      enabled,
+      targetScope: targetScope || 'all',
+      targetStacks: Array.isArray(targetStacks) ? targetStacks : [],
+      targetContainers: Array.isArray(targetContainers) ? targetContainers : [],
+      includeUptime: includeUptime ?? true,
+      includeStatus: includeStatus ?? true,
+    });
     res.json({ success: true, webhook: created });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -534,11 +554,13 @@ app.post('/api/webhooks/:id/report', async (req, res) => {
 
     const containers = await docker.listContainers(true);
     const enriched = containers.map((c) => ({
-      name: c.Names && c.Names[0] ? c.Names[0].replace(/^\//, '') : c.Id.substring(0, 12),
+      id: c.Id,
+      shortId: c.Id ? c.Id.substring(0, 12) : '',
+      name: c.Names && c.Names[0] ? c.Names[0].replace(/^\//, '') : (c.Id ? c.Id.substring(0, 12) : 'container'),
       image: c.Image,
       state: c.State,
       status: c.Status,
-      stack: c.Labels ? c.Labels['com.docker.compose.project'] || null : null,
+      stack: c.Labels ? c.Labels['com.docker.compose.project'] || c.Labels['com.docker.stack.namespace'] || null : null,
     }));
 
     await webhookManager.sendDigestReport(webhook, enriched);

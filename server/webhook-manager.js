@@ -270,7 +270,12 @@ function matchesWebhookTarget(webhook, container) {
   const rawName = String(container.name || (Array.isArray(container.names) ? container.names[0] : '') || '').replace(/^\//, '').toLowerCase();
   const rawId = String(container.id || '').toLowerCase();
   const rawShortId = String(container.shortId || rawId.substring(0, 12)).toLowerCase();
-  const rawStack = String(container.stack || '').toLowerCase();
+  const rawStack = String(
+    container.stack ||
+    container.labels?.['com.docker.compose.project'] ||
+    container.labels?.['com.docker.stack.namespace'] ||
+    ''
+  ).toLowerCase();
 
   const matchedContainer = targetContainers.some(
     (tc) => tc === rawName || tc === rawId || tc === rawShortId

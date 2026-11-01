@@ -13,6 +13,8 @@ import {
   Clock,
   Activity,
   FileText,
+  Edit2,
+  Check,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { DiscordWebhook, DockerContainer, WebhookEvent } from '../types';
@@ -71,14 +73,39 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
   const [sendingReportId, setSendingReportId] = useState<string | null>(null);
   const [showGuide, setShowGuide] = useState(false);
 
-  // Local state for instant optimistic updates and safe deletion
+  // Local state for instant optimistic updates, safe deletion and editing
   const [localWebhooks, setLocalWebhooks] = useState<DiscordWebhook[]>(webhooks);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [isDeletingId, setIsDeletingId] = useState<string | null>(null);
+  const [editingWebhookId, setEditingWebhookId] = useState<string | null>(null);
 
   React.useEffect(() => {
     setLocalWebhooks(webhooks);
   }, [webhooks]);
+
+  const handleStartEdit = (wh: DiscordWebhook) => {
+    setEditingWebhookId(wh.id);
+    setName(wh.name);
+    setUrl(wh.url);
+    setSelectedEvents(wh.events || ['start', 'stop', 'restart', 'delete', 'die']);
+    setTargetScope(wh.targetScope || 'all');
+    setSelectedStacks(wh.targetStacks || []);
+    setSelectedContainers(wh.targetContainers || []);
+    setIncludeUptime(wh.includeUptime !== false);
+    setIncludeStatus(wh.includeStatus !== false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingWebhookId(null);
+    setName('');
+    setUrl('');
+    setSelectedEvents(['start', 'stop', 'restart', 'delete', 'die']);
+    setTargetScope('all');
+    setSelectedStacks([]);
+    setSelectedContainers([]);
+    setIncludeUptime(true);
+    setIncludeStatus(true);
+  };
 
   // Extract unique stacks and standalone containers
   const availableStacks = Array.from(
@@ -163,38 +190,59 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
 
     try {
       setIsSubmitting(true);
-      const created = await createWebhook({
-        name: name.trim() || 'Discord #docker-alerts',
-        url: url.trim(),
-        events: selectedEvents,
-        enabled: true,
-        ...( {
+      if (editingWebhookId) {
+        const updated = await updateWebhook(editingWebhookId, {
+          name: name.trim() || 'Discord #docker-alerts',
+          url: url.trim(),
+          events: selectedEvents,
           targetScope,
           targetStacks: targetScope === 'custom' ? selectedStacks : [],
           targetContainers: targetScope === 'custom' ? selectedContainers : [],
           includeUptime,
           includeStatus,
-        } as any)
-      });
+        });
 
-      if (created) {
-        setLocalWebhooks((prev) => [...prev, created]);
+        if (updated) {
+          setLocalWebhooks((prev) =>
+            prev.map((w) => (w.id === editingWebhookId ? updated : w))
+          );
+        }
+
+        toast.success('Webhook Discord mis à jour !', {
+          description: targetScope === 'custom'
+            ? `Ciblage configuré : ${(selectedStacks.concat(selectedContainers)).join(', ') || 'spécifique'}`
+            : 'Surveillance appliquée à tous les conteneurs.',
+        });
+
+        handleCancelEdit();
+      } else {
+        const created = await createWebhook({
+          name: name.trim() || 'Discord #docker-alerts',
+          url: url.trim(),
+          events: selectedEvents,
+          enabled: true,
+          targetScope,
+          targetStacks: targetScope === 'custom' ? selectedStacks : [],
+          targetContainers: targetScope === 'custom' ? selectedContainers : [],
+          includeUptime,
+          includeStatus,
+        });
+
+        if (created) {
+          setLocalWebhooks((prev) => [...prev, created]);
+        }
+
+        toast.success('Webhook Discord ajouté !', {
+          description: targetScope === 'custom'
+            ? `Ciblage configuré pour : ${(selectedStacks.concat(selectedContainers)).join(', ')}`
+            : 'Les alertes sélectionnées seront envoyées en temps réel.',
+        });
+
+        handleCancelEdit();
       }
-
-      toast.success('Webhook Discord ajouté !', {
-        description: 'Les alertes sélectionnées seront envoyées en temps réel.',
-      });
-
-      // Reset form
-      setName('');
-      setUrl('');
-      setSelectedEvents(['start', 'stop', 'restart', 'delete', 'die']);
-      setTargetScope('all');
-      setSelectedStacks([]);
-      setSelectedContainers([]);
       onRefreshWebhooks();
     } catch (err: any) {
-      toast.error('Erreur lors de la création', {
+      toast.error('Erreur', {
         description: err.message,
       });
     } finally {
@@ -294,19 +342,30 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
             )}
           </div>
 
-          {/* Form: Add New Webhook */}
+          {/* Form: Add or Edit Webhook */}
           <form
             onSubmit={handleCreate}
             className="p-5 rounded-2xl bg-light-subcard dark:bg-nothing-subcard border border-light-border dark:border-nothing-border space-y-4"
           >
             <div className="flex items-center justify-between">
               <h3 className="font-display font-semibold text-sm text-zinc-900 dark:text-white flex items-center gap-2">
-                <Plus size={16} />
-                Configurer un nouveau Webhook
+                {editingWebhookId ? <Edit2 size={16} className="text-nothing-red" /> : <Plus size={16} />}
+                {editingWebhookId ? 'Modifier le Webhook Discord' : 'Configurer un nouveau Webhook'}
               </h3>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
-                Discord Embed API
-              </span>
+              <div className="flex items-center gap-2">
+                {editingWebhookId && (
+                  <button
+                    type="button"
+                    onClick={handleCancelEdit}
+                    className="text-xs font-mono text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 underline mr-1"
+                  >
+                    Annuler l'édition
+                  </button>
+                )}
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
+                  {editingWebhookId ? 'Mode Édition' : 'Discord Embed API'}
+                </span>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -510,8 +569,8 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
                 disabled={isSubmitting || !url}
                 className="px-4 py-2 rounded-xl bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 text-xs font-semibold flex items-center gap-1.5 btn-press shadow-xs disabled:opacity-50"
               >
-                <Plus size={14} />
-                <span>Enregistrer le Webhook</span>
+                {editingWebhookId ? <Check size={14} /> : <Plus size={14} />}
+                <span>{editingWebhookId ? 'Mettre à jour le Webhook' : 'Enregistrer le Webhook'}</span>
               </button>
             </div>
           </form>
@@ -543,7 +602,7 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
                     className="p-4 rounded-2xl bg-light-subcard dark:bg-nothing-subcard border border-light-border dark:border-nothing-border flex flex-col sm:flex-row sm:items-center justify-between gap-3 group hover:border-zinc-400 dark:hover:border-zinc-700 transition-colors"
                   >
                     <div className="space-y-1.5 min-w-0">
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className="font-display font-bold text-sm text-zinc-900 dark:text-white truncate">
                           {wh.name}
                         </span>
@@ -562,9 +621,29 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
                           {wh.enabled ? 'Actif' : 'Désactivé'}
                         </span>
 
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300">
-                          {wh.targetScope === 'custom' ? 'Ciblé' : 'Tous conteneurs'}
-                        </span>
+                        {wh.targetScope === 'custom' ? (
+                          <div className="flex flex-wrap items-center gap-1">
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-nothing-red/10 text-nothing-red border border-nothing-red/20 font-semibold">
+                              Ciblé
+                            </span>
+                            {wh.targetStacks && wh.targetStacks.length > 0 && (
+                              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 flex items-center gap-1 font-medium">
+                                <Layers size={10} className="text-nothing-red" />
+                                {wh.targetStacks.join(', ')}
+                              </span>
+                            )}
+                            {wh.targetContainers && wh.targetContainers.length > 0 && (
+                              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 flex items-center gap-1 font-medium">
+                                <Box size={10} className="text-nothing-red" />
+                                {wh.targetContainers.join(', ')}
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300">
+                            Tous conteneurs
+                          </span>
+                        )}
                       </div>
 
                       <p className="text-[11px] font-mono text-zinc-400 truncate max-w-md">
@@ -634,6 +713,19 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
                         title="Envoyer un ping de test"
                       >
                         <Send size={14} className={testingUrl === wh.url ? 'animate-pulse text-nothing-red' : ''} />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleStartEdit(wh)}
+                        className={`p-2 rounded-xl text-xs font-mono btn-press border ${
+                          editingWebhookId === wh.id
+                            ? 'bg-nothing-red text-white border-nothing-red shadow-xs'
+                            : 'bg-light-card dark:bg-nothing-card hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white border-light-border dark:border-nothing-border'
+                        }`}
+                        title="Modifier ce webhook (changer la stack, les conteneurs ou événements)"
+                      >
+                        <Edit2 size={14} />
                       </button>
 
                       {/* Delete Action with Safe Inline Confirmation */}

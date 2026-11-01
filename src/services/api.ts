@@ -129,6 +129,11 @@ export async function createWebhook(payload: {
   url: string;
   events: string[];
   enabled?: boolean;
+  targetScope?: 'all' | 'custom';
+  targetStacks?: string[];
+  targetContainers?: string[];
+  includeUptime?: boolean;
+  includeStatus?: boolean;
 }): Promise<DiscordWebhook> {
   const res = await fetch(`${API_BASE}/webhooks`, {
     method: 'POST',
