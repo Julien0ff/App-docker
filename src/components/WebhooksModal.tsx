@@ -71,6 +71,15 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
   const [sendingReportId, setSendingReportId] = useState<string | null>(null);
   const [showGuide, setShowGuide] = useState(false);
 
+  // Local state for instant optimistic updates and safe deletion
+  const [localWebhooks, setLocalWebhooks] = useState<DiscordWebhook[]>(webhooks);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [isDeletingId, setIsDeletingId] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    setLocalWebhooks(webhooks);
+  }, [webhooks]);
+
   // Extract unique stacks and standalone containers
   const availableStacks = Array.from(
     new Set(containers.map((c) => c.stack).filter(Boolean) as string[])
@@ -154,7 +163,7 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
 
     try {
       setIsSubmitting(true);
-      await createWebhook({
+      const created = await createWebhook({
         name: name.trim() || 'Discord #docker-alerts',
         url: url.trim(),
         events: selectedEvents,
@@ -167,6 +176,10 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
           includeStatus,
         } as any)
       });
+
+      if (created) {
+        setLocalWebhooks((prev) => [...prev, created]);
+      }
 
       toast.success('Webhook Discord ajouté !', {
         description: 'Les alertes sélectionnées seront envoyées en temps réel.',
@@ -191,22 +204,32 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
 
   const handleToggle = async (wh: DiscordWebhook) => {
     try {
+      setLocalWebhooks((prev) =>
+        prev.map((w) => (w.id === wh.id ? { ...w, enabled: !w.enabled } : w))
+      );
       await updateWebhook(wh.id, { enabled: !wh.enabled });
       toast.success(wh.enabled ? 'Webhook désactivé' : 'Webhook activé');
       onRefreshWebhooks();
     } catch (err: any) {
+      setLocalWebhooks(webhooks);
       toast.error('Erreur', { description: err.message });
     }
   };
 
-  const handleDelete = async (id: string, webhookName: string) => {
-    if (!confirm(`Supprimer le webhook "${webhookName}" ?`)) return;
+  const handleConfirmDelete = async (id: string, webhookName: string) => {
     try {
+      setIsDeletingId(id);
+      // Instant optimistic deletion from UI
+      setLocalWebhooks((prev) => prev.filter((w) => w.id !== id));
       await deleteWebhook(id);
-      toast.success('Webhook supprimé');
+      toast.success(`Webhook "${webhookName}" supprimé avec succès`);
+      setConfirmDeleteId(null);
       onRefreshWebhooks();
     } catch (err: any) {
+      setLocalWebhooks(webhooks);
       toast.error('Erreur lors de la suppression', { description: err.message });
+    } finally {
+      setIsDeletingId(null);
     }
   };
 
@@ -444,28 +467,26 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
             </div>
 
             {/* Metrics Options */}
-            <div className="pt-1 flex flex-wrap gap-4 text-xs font-mono text-zinc-600 dark:text-zinc-300">
-              <label className="flex items-center gap-2 cursor-pointer select-none">
+            <div className="pt-1 flex flex-wrap gap-5 text-xs font-mono text-zinc-600 dark:text-zinc-300">
+              <label className="flex items-center gap-2.5 cursor-pointer select-none group">
                 <input
                   type="checkbox"
                   checked={includeStatus}
                   onChange={(e) => setIncludeStatus(e.target.checked)}
-                  className="rounded border-zinc-400 text-nothing-red focus:ring-0"
                 />
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1.5 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
                   <Activity size={13} className="text-emerald-500" />
                   Inclure le statut détaillé
                 </span>
               </label>
 
-              <label className="flex items-center gap-2 cursor-pointer select-none">
+              <label className="flex items-center gap-2.5 cursor-pointer select-none group">
                 <input
                   type="checkbox"
                   checked={includeUptime}
                   onChange={(e) => setIncludeUptime(e.target.checked)}
-                  className="rounded border-zinc-400 text-nothing-red focus:ring-0"
                 />
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1.5 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
                   <Clock size={13} className="text-amber-500" />
                   Inclure l'uptime
                 </span>
@@ -500,11 +521,11 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
             <h3 className="font-display font-semibold text-sm text-zinc-900 dark:text-white flex items-center justify-between">
               <span>Salons Discord configurés</span>
               <span className="text-xs font-mono text-zinc-400">
-                {webhooks.length} {webhooks.length > 1 ? 'webhooks' : 'webhook'}
+                {localWebhooks.length} {localWebhooks.length > 1 ? 'webhooks' : 'webhook'}
               </span>
             </h3>
 
-            {webhooks.length === 0 ? (
+            {localWebhooks.length === 0 ? (
               <div className="p-8 rounded-2xl bg-light-subcard dark:bg-nothing-subcard border border-light-border dark:border-nothing-border text-center">
                 <Bell size={28} className="mx-auto text-zinc-400 mb-2 opacity-60" />
                 <p className="text-xs font-medium text-zinc-600 dark:text-zinc-300">
@@ -516,7 +537,7 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
               </div>
             ) : (
               <div className="space-y-3">
-                {webhooks.map((wh) => (
+                {localWebhooks.map((wh) => (
                   <div
                     key={wh.id}
                     className="p-4 rounded-2xl bg-light-subcard dark:bg-nothing-subcard border border-light-border dark:border-nothing-border flex flex-col sm:flex-row sm:items-center justify-between gap-3 group hover:border-zinc-400 dark:hover:border-zinc-700 transition-colors"
@@ -582,6 +603,7 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
                     {/* Actions on this webhook */}
                     <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
                       <button
+                        type="button"
                         onClick={() => handleSendReport(wh.id)}
                         disabled={sendingReportId === wh.id}
                         className="px-3 py-1.5 rounded-xl bg-light-card dark:bg-nothing-card hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 text-xs font-mono btn-press border border-light-border dark:border-nothing-border flex items-center gap-1.5"
@@ -592,6 +614,7 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
                       </button>
 
                       <button
+                        type="button"
                         onClick={() => handleToggle(wh)}
                         className={`px-3 py-1.5 rounded-xl text-xs font-mono btn-press border ${
                           wh.enabled
@@ -604,6 +627,7 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
                       </button>
 
                       <button
+                        type="button"
                         onClick={() => handleTestUrl(wh.url, wh.name)}
                         disabled={testingUrl === wh.url}
                         className="p-2 rounded-xl bg-light-card dark:bg-nothing-card hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white btn-press border border-light-border dark:border-nothing-border"
@@ -612,13 +636,37 @@ export const WebhooksModal: React.FC<WebhooksModalProps> = ({
                         <Send size={14} className={testingUrl === wh.url ? 'animate-pulse text-nothing-red' : ''} />
                       </button>
 
-                      <button
-                        onClick={() => handleDelete(wh.id, wh.name)}
-                        className="p-2 rounded-xl bg-light-card dark:bg-nothing-card hover:bg-red-500/10 text-zinc-400 hover:text-nothing-red btn-press border border-light-border dark:border-nothing-border"
-                        title="Supprimer ce webhook"
-                      >
-                        <Trash2 size={14} />
-                      </button>
+                      {/* Delete Action with Safe Inline Confirmation */}
+                      {confirmDeleteId === wh.id ? (
+                        <div className="flex items-center gap-1.5 animate-scale-in">
+                          <button
+                            type="button"
+                            onClick={() => handleConfirmDelete(wh.id, wh.name)}
+                            disabled={isDeletingId === wh.id}
+                            className="px-2.5 py-1.5 rounded-xl bg-nothing-red text-white text-xs font-mono font-medium hover:bg-red-600 btn-press flex items-center gap-1.5 shadow-xs disabled:opacity-50"
+                            title="Confirmer la suppression"
+                          >
+                            <Trash2 size={13} className={isDeletingId === wh.id ? 'animate-spin' : ''} />
+                            <span>Supprimer</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setConfirmDeleteId(null)}
+                            className="px-2.5 py-1.5 rounded-xl bg-light-card dark:bg-nothing-card text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white text-xs font-mono border border-light-border dark:border-nothing-border btn-press"
+                          >
+                            Annuler
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setConfirmDeleteId(wh.id)}
+                          className="p-2 rounded-xl bg-light-card dark:bg-nothing-card hover:bg-red-500/10 text-zinc-400 hover:text-nothing-red btn-press border border-light-border dark:border-nothing-border transition-colors"
+                          title="Supprimer ce webhook"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}

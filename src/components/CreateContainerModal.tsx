@@ -413,14 +413,13 @@ export const CreateContainerModal: React.FC<CreateContainerModalProps> = ({
                 </div>
 
                 <div className="flex items-center pt-5">
-                  <label className="flex items-center gap-2 cursor-pointer text-xs">
+                  <label className="flex items-center gap-2.5 cursor-pointer text-xs group select-none">
                     <input
                       type="checkbox"
                       checked={startImmediately}
                       onChange={(e) => setStartImmediately(e.target.checked)}
-                      className="w-4 h-4 rounded text-nothing-red focus:ring-nothing-red/30"
                     />
-                    <span>{t.startImmediately}</span>
+                    <span className="group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">{t.startImmediately}</span>
                   </label>
                 </div>
               </div>

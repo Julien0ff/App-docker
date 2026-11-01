@@ -115,7 +115,7 @@ export const DeleteContainerModal: React.FC<DeleteContainerModalProps> = ({
                 type="checkbox"
                 checked={force}
                 onChange={(e) => setForce(e.target.checked)}
-                className="mt-0.5 w-4 h-4 rounded text-nothing-red focus:ring-nothing-red/30 bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700"
+                className="mt-0.5"
               />
               <div className="text-xs">
                 <span className="font-semibold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
@@ -133,7 +133,7 @@ export const DeleteContainerModal: React.FC<DeleteContainerModalProps> = ({
                 type="checkbox"
                 checked={removeVolumes}
                 onChange={(e) => setRemoveVolumes(e.target.checked)}
-                className="mt-0.5 w-4 h-4 rounded text-nothing-red focus:ring-nothing-red/30 bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700"
+                className="mt-0.5"
               />
               <div className="text-xs">
                 <span className="font-semibold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
