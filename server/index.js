@@ -11,7 +11,7 @@ const webhookManager = require('./webhook-manager');
 
 const app = express();
 const PORT = process.env.PORT || 4500;
-const APP_VERSION = '26.2';
+const APP_VERSION = '26.2.5';
 
 app.use(cors());
 app.use(express.json());
@@ -796,7 +796,7 @@ app.post('/api/stacks/deploy', async (req, res) => {
   }
 });
 
-// 12. Check for updates (CalVer 26.2)
+// 12. Check for updates (CalVer 26.2.5)
 app.get('/api/system/check-updates', (req, res) => {
   const currentVersion = APP_VERSION;
   const githubRepo = process.env.GITHUB_REPO || 'Julien0ff/App-docker';

@@ -2,6 +2,8 @@ name: Release Dock (1) Desktop
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
   release:
@@ -9,9 +11,9 @@ on:
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Tag de version (ex: v26.2)'
+        description: 'Tag de version (ex: v26.2.5)'
         required: false
-        default: 'v26.2'
+        default: 'v26.2.5'
 
 permissions:
   contents: write
@@ -44,6 +46,22 @@ jobs:
           node-version: 20
           cache: 'npm'
 
+      - name: Resolve Release Tag
+        id: meta
+        shell: bash
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            TAG="${{ github.ref_name }}"
+          elif [[ -n "${{ github.event.inputs.tag_name }}" ]]; then
+            TAG="${{ github.event.inputs.tag_name }}"
+          elif [[ -n "${{ github.event.release.tag_name }}" ]]; then
+            TAG="${{ github.event.release.tag_name }}"
+          else
+            VER=$(node -p "require('./package.json').version")
+            TAG="v${VER}"
+          fi
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
       - name: Install dependencies
         run: npm ci || npm install
 
@@ -54,10 +72,24 @@ jobs:
 
       - name: Publish Release Assets to GitHub
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' || github.event_name == 'release'
         with:
-          tag_name: ${{ github.event.inputs.tag_name || github.event.release.tag_name || github.ref_name }}
-          name: Dock (1) ${{ github.event.inputs.tag_name || github.event.release.tag_name || github.ref_name }}
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: Dock (1) ${{ steps.meta.outputs.tag }}
+          body: |
+            # ⚡ Dock (1) — Version 26.2.5
+
+            Mise à jour de stabilité **Dock (1) v26.2.5** corrigeant le lancement de l'AppImage Linux, le service d'auto-démarrage `systemd` pour les chemins contenant des espaces et le stockage persistant des webhooks.
+
+            ### 🛠️ Corrections & Améliorations
+            - **Serveur Embarqué Electron (`AppImage` / Desktop)** : Chargement direct du serveur API dans le processus principal d'Electron (corrige l'erreur `spawn ENOTDIR` sur `app.asar` lorsque le démon local n'était pas déjà actif).
+            - **Service `systemd` (`dockdash.service`)** : Support complet des chemins contenant des espaces dans `ExecStart` (`scripts/setup-service.sh` & `server/systemd-manager.js`).
+            - **Persistance des Webhooks en mode Packagé** : Stockage automatique dans `~/.config/dock-one/data` lorsque l'application est exécutée depuis une archive `app.asar` en lecture seule.
+            - **Sandbox Linux AppImage** : Activation automatique du flag `no-sandbox` sous Linux pour éviter les blocages FUSE au lancement.
+
+            ### 📦 Téléchargements Disponibles
+            - **Linux** : `Dock (1)-26.2.5.AppImage`, `dock-one_26.2.5_amd64.deb`, `.tar.gz`
+            - **macOS** : `Dock (1)-26.2.5.dmg`, `.zip` (Apple Silicon & Intel)
+            - **Windows** : `Dock (1) Setup 26.2.5.exe`, `.zip`
           draft: false
           prerelease: false
           generate_release_notes: true

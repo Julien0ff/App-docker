@@ -5,7 +5,10 @@ const http = require('http');
 const os = require('os');
 const { DOCKER_SOCKET } = require('./docker-client');
 
-const DATA_DIR = path.join(__dirname, 'data');
+const IS_PACKAGED_ASAR = __dirname.includes('app.asar');
+const DATA_DIR = IS_PACKAGED_ASAR
+  ? path.join(os.homedir(), '.config', 'dock-one', 'data')
+  : path.join(__dirname, 'data');
 const WEBHOOKS_FILE = path.join(DATA_DIR, 'webhooks.json');
 
 // Ensure data folder exists
@@ -68,7 +71,7 @@ function postToDiscord(webhookUrl, payload) {
         headers: {
           'Content-Type': 'application/json',
           'Content-Length': Buffer.byteLength(postData),
-          'User-Agent': 'Dock-1-Docker-Manager/26.2',
+          'User-Agent': 'Dock-1-Docker-Manager/26.2.5',
         },
       };
 
@@ -139,7 +142,7 @@ async function testWebhook(webhookUrl, channelName = 'Salon Discord') {
           },
         ],
         footer: {
-          text: 'Dock (1) • Docker Manager v26.2',
+          text: 'Dock (1) • Docker Manager v26.2.5',
         },
         timestamp: new Date().toISOString(),
       },
@@ -224,7 +227,7 @@ async function sendDigestReport(webhookOrUrl, containers = []) {
           },
         ],
         footer: {
-          text: `Dock (1) • Rapport d'Uptime & Santé v26.2 • ${scopeLabel}`,
+          text: `Dock (1) • Rapport d'Uptime & Santé v26.2.5 • ${scopeLabel}`,
         },
         timestamp: new Date().toISOString(),
       },
@@ -407,7 +410,7 @@ async function notify(event, container, extra = {}) {
           color,
           fields,
           footer: {
-            text: `Dock (1) • Événement ${event.toUpperCase()} • v26.2`,
+            text: `Dock (1) • Événement ${event.toUpperCase()} • v26.2.5`,
           },
           timestamp: new Date().toISOString(),
         },
