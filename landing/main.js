@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
       navChangelog: 'Changelog',
       btnDownloadApp: "Télécharger l'App",
       btnHeroDownload: "Télécharger l'Application",
-      releaseWaiting: 'Version v26.2 disponible • Linux, macOS & Windows',
+      releaseWaiting: 'Version v26.2.5 disponible • Linux, macOS & Windows',
       releaseLive: (tag, date) => `${tag} disponible sur GitHub (publiée le ${date})`,
     },
     en: {
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
       navChangelog: 'Changelog',
       btnDownloadApp: 'Download App',
       btnHeroDownload: 'Download Application',
-      releaseWaiting: 'Version v26.2 ready • Linux, macOS & Windows',
+      releaseWaiting: 'Version v26.2.5 ready • Linux, macOS & Windows',
       releaseLive: (tag, date) => `${tag} live on GitHub (released on ${date})`,
     }
   };
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (Array.isArray(releases) && releases.length > 0) {
         const latest = releases[0];
-        const tag = latest.tag_name || 'v26.2';
+        const tag = latest.tag_name || 'v26.2.5';
         const pubDate = new Date(latest.published_at || Date.now()).toLocaleDateString('fr-FR', {
           year: 'numeric',
           month: 'long',
@@ -115,12 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } else {
         if (statusText) {
-          statusText.textContent = 'Version v26.2 • Installateurs Linux, macOS & Windows';
+          statusText.textContent = 'Version v26.2.5 • Installateurs Linux, macOS & Windows';
         }
       }
     } catch (err) {
       if (statusText) {
-        statusText.textContent = 'Version v26.2 • Linux, macOS & Windows';
+        statusText.textContent = 'Version v26.2.5 • Linux, macOS & Windows';
       }
     }
   }

@@ -35,7 +35,7 @@ export const UpdateModal: React.FC<UpdateModalProps> = ({
 
   if (!isOpen) return null;
 
-  const currentVersion = updateInfo?.currentVersion || '26.2.0';
+  const currentVersion = updateInfo?.currentVersion || '26.2.5';
   const hasUpdate = !!updateInfo?.hasUpdate;
   const latestVersion = updateInfo?.latestVersion || currentVersion;
 

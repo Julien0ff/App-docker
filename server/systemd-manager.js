@@ -32,7 +32,7 @@ Wants=docker.service
 [Service]
 Type=simple
 WorkingDirectory=${APP_DIR}
-ExecStart=${NODE_BIN} ${path.join(APP_DIR, 'server', 'index.js')}
+ExecStart=${NODE_BIN} "${path.join(APP_DIR, 'server', 'index.js')}"
 Restart=always
 RestartSec=5
 Environment=NODE_ENV=production PORT=4500

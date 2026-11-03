@@ -26,7 +26,7 @@ export const Logo: React.FC<LogoProps> = ({ size = 'md', className = '', subtitl
             DOCK (1)
           </span>
           <span className="text-[10px] px-1.5 py-0.5 rounded-full font-mono bg-zinc-200 dark:bg-nothing-subcard text-zinc-700 dark:text-zinc-300 border border-zinc-300 dark:border-zinc-800 font-semibold">
-            v26.2
+            v26.2.5
           </span>
         </div>
         <p className="text-[11px] font-mono text-zinc-600 dark:text-zinc-400 flex items-center gap-1">

@@ -1,10 +1,12 @@
-const { app, BrowserWindow, shell, ipcMain } = require('electron');
+const { app, BrowserWindow, shell } = require('electron');
 const path = require('path');
-const { spawn } = require('child_process');
 const http = require('http');
 
+if (process.platform === 'linux') {
+  app.commandLine.appendSwitch('no-sandbox');
+}
+
 let mainWindow = null;
-let serverProcess = null;
 const PORT = process.env.PORT || 4500;
 const SERVER_URL = `http://localhost:${PORT}`;
 
@@ -22,34 +24,31 @@ function checkServerRunning() {
   });
 }
 
-// Start backend server child process if not already running
+// Start backend server in-process if not already running
 async function startServerIfNeeded() {
-  const isRunning = await checkServerRunning();
-  if (isRunning) {
-    console.log('[Electron] Serveur local déjà en cours d\'exécution sur le port', PORT);
-    return;
-  }
-
-  console.log('[Electron] Lancement du démon local Dock (1)...');
-  const serverPath = path.join(__dirname, '..', 'server', 'index.js');
-  serverProcess = spawn(process.execPath, [serverPath], {
-    cwd: path.join(__dirname, '..'),
-    env: { ...process.env, PORT: String(PORT), NODE_ENV: 'production' },
-    stdio: 'inherit',
-  });
-
-  serverProcess.on('error', (err) => {
-    console.error('[Electron] Erreur serveur :', err);
-  });
-
-  // Wait for server to become responsive
-  for (let i = 0; i < 20; i++) {
-    await new Promise((r) => setTimeout(r, 300));
-    const ready = await checkServerRunning();
-    if (ready) {
-      console.log('[Electron] Serveur prêt !');
-      break;
+  try {
+    const isRunning = await checkServerRunning();
+    if (isRunning) {
+      console.log('[Electron] Serveur local déjà en cours d\'exécution sur le port', PORT);
+      return;
     }
+
+    console.log('[Electron] Lancement du démon local Dock (1)...');
+    process.env.PORT = String(PORT);
+    process.env.NODE_ENV = 'production';
+    require(path.join(__dirname, '..', 'server', 'index.js'));
+
+    // Wait for server to become responsive
+    for (let i = 0; i < 20; i++) {
+      await new Promise((r) => setTimeout(r, 250));
+      const ready = await checkServerRunning();
+      if (ready) {
+        console.log('[Electron] Serveur prêt !');
+        break;
+      }
+    }
+  } catch (err) {
+    console.error('[Electron] Erreur lors du démarrage du serveur local :', err);
   }
 }
 
@@ -105,13 +104,5 @@ app.whenReady().then(async () => {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
-  }
-});
-
-app.on('will-quit', () => {
-  if (serverProcess) {
-    console.log('[Electron] Arrêt du démon local...');
-    serverProcess.kill();
-    serverProcess = null;
   }
 });
